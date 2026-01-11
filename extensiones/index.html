@@ -1,0 +1,1975 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extensiones | Rubencho_80</title>
+    <link rel="icon" href="R.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        /* Variables y Reset */
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --accent-color: #f59e0b;
+            --dark-color: #1f2937;
+            --light-color: #f8fafc;
+            --text-color: #334155;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --border-radius: 10px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-color);
+        }
+        
+        h1, h2, h3, h4 {
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        section {
+            padding: 80px 0;
+        }
+        
+        /* Botones - Mismo estilo */
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 28px;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* Header y Navegación - Adaptado para esta página */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            color: var(--accent-color);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark-color);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Icono de R */
+        .r-icon {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            margin-right: 8px;
+            vertical-align: middle;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-image: url('R.png');
+        }
+        
+        /* Hero Section */
+        .hero-extensions {
+            padding-top: 150px;
+            min-height: 70vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            align-items: center;
+        }
+        
+        .hero-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 50px;
+        }
+        
+        .hero-left {
+            flex: 1;
+            max-width: 600px;
+        }
+        
+        .hero-right {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .hero-extensions h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .hero-extensions h1 span {
+            color: var(--primary-color);
+        }
+        
+        .hero-extensions h2 {
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: var(--text-color);
+            margin-bottom: 25px;
+        }
+        
+        .hero-extensions p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 550px;
+        }
+        
+        .hero-btns {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .profile-image-container {
+            position: relative;
+            width: 350px;
+            height: 350px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 8px solid white;
+            box-shadow: var(--shadow);
+        }
+
+        .profile-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .profile-image-container:hover img {
+            transform: scale(1.05);
+        }
+        
+        .extension-hero-img {
+            width: 350px;
+            height: 350px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 8px solid white;
+            box-shadow: var(--shadow);
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .extension-hero-img i {
+            font-size: 8rem;
+            color: white;
+        }
+        
+        /* Sección de Extensiones */
+        .extensions-showcase {
+            background-color: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary-color);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        
+        /* Grid de extensiones */
+        .extensions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .extension-card {
+            background-color: #f8fafc;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .extension-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        /* Carrusel para cada extensión */
+        .extension-carousel {
+            position: relative;
+            height: 270px;
+            overflow: hidden;
+        }
+        
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        
+        .carousel-slide.active {
+            opacity: 1;
+        }
+        
+        .carousel-img {
+            width: 100%;
+            height: 90%;
+            display: flex;
+            object-fit:cover;      /* mantiene proporciones */
+            object-position: center;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+        
+        .carousel-img .img-text {
+            margin-top: 15px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            text-align: center;
+            padding: 0 10px;
+        }
+        
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.6);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--dark-color);
+            transition: var(--transition);
+            z-index: 10;
+        }
+        
+        .carousel-btn:hover {
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .prev-btn {
+            left: 10px;
+        }
+        
+        .next-btn {
+            right: 10px;
+        }
+        
+        .carousel-dots {
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            z-index: 10;
+        }
+        
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .dot.active {
+            background-color: white;
+            transform: scale(1.2);
+        }
+        
+        .dot:hover {
+            background-color: white;
+        }
+        
+        .extension-content {
+            padding: 25px;
+        }
+        
+        .extension-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .extension-content p {
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+        
+        .extension-links {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        /* Estilos para el botón Jugar */
+        .btn-details {
+            background-color: var(--accent-color) !important;
+        }
+
+        .btn-details:hover {
+            background-color: #d97706 !important;
+        }
+
+        /* Estilos para el botón Ver vídeo */
+        .btn-video {
+            background-color: #FF0000 !important; /* Rojo de YouTube */
+        }
+
+        .btn-video:hover {
+            background-color: #CC0000 !important;
+        }
+
+        /* Contenedor específico para YouTube */
+        .youtube-embed-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 75%; /* Relación de aspecto 4:3 */
+            height: 0;
+            overflow: hidden;
+        }
+
+        .youtube-embed-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Estilos específicos para el modal de YouTube */
+        .youtube-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2000;
+        }
+
+        .youtube-modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Modal para proyectos Scratch */
+        .scratch-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .scratch-modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(3px);
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: white;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            border-radius: var(--border-radius);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            z-index: 2001;
+            animation: slideUp 0.4s ease;
+            overflow: hidden;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            z-index: 10;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background-color: #dc2626;
+            transform: rotate(90deg);
+        }
+
+        .modal-header {
+            padding: 25px 30px 15px;
+            border-bottom: 1px solid #e5e7eb;
+            background-color: #f8fafc;
+        }
+
+        .modal-header h3 {
+            margin-bottom: 0;
+            color: var(--primary-color);
+        }
+
+        .modal-body {
+            padding: 0;
+        }
+
+        .scratch-embed-container {
+            width: 100%;
+            height: 700px;
+            overflow: hidden;
+        }
+
+        .scratch-embed-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .modal-footer {
+            padding: 15px 30px;
+            background-color: #f8fafc;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        /* Animaciones para el modal */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0); 
+            }
+        }
+
+        /* Responsive para el modal */
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                max-height: 85vh;
+            }
+            
+            .scratch-embed-container {
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .scratch-embed-container {
+                height: 300px;
+            }
+            
+            .modal-header {
+                padding: 20px 20px 10px;
+            }
+            
+            .modal-footer {
+                padding: 10px 20px;
+            }
+        }
+
+        /* Modal para imágenes ampliadas */
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .image-modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+        }
+
+        .image-modal-content {
+            position: relative;
+            z-index: 3001;
+            max-width: 90%;
+            max-height: 90vh;
+            animation: zoomIn 0.4s ease;
+        }
+
+        .expanded-image {
+            border-radius: 12px;
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .image-modal-close {
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: var(--transition);
+            z-index: 3002;
+        }
+
+        .image-modal-close:hover {
+            background-color: #dc2626;
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        /* Animación de zoom para la imagen */
+        @keyframes zoomIn {
+            from { 
+                opacity: 0;
+                transform: scale(0.8); 
+            }
+            to { 
+                opacity: 1;
+                transform: scale(1); 
+            }
+        }
+
+        /* Responsive para el modal de imágenes */
+        @media (max-width: 768px) {
+            .image-modal-content {
+                max-width: 95%;
+            }
+            
+            .expanded-image {
+                max-height: 80vh;
+            }
+            
+            .image-modal-close {
+                top: -60px;
+                right: 10px;
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .image-modal-close {
+                top: -55px;
+                right: 5px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Sección de Proyectos Scratch */
+        .scratch-projects {
+            background-color: #f8fafc;
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .project-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .project-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .project-carousel {
+            position: relative;
+            height: 220px;
+            overflow: hidden;
+        }
+        
+        .project-content {
+            padding: 25px;
+        }
+        
+        .project-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .project-content p {
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+        
+        /* Contacto */
+        .contact {
+            background-color: #f8fafc;
+        }
+        
+        .contact-container {
+            display: flex;
+            gap: 50px;
+        }
+        
+        .contact-info {
+            flex: 1;
+        }
+        
+        .contact-form {
+            flex: 1;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .contact-item a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .contact-item a:hover {
+            color: var(--primary-color);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        
+        .form-notice {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background-color: #e0f2fe;
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-notice i {
+            font-size: 1rem;
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        /* Footer - Mismo estilo */
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+        
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 40px;
+        }
+        
+        .footer-links h4 {
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .social-links a:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .hero-left {
+                max-width: 100%;
+                margin-bottom: 40px;
+            }
+            
+            .hero-extensions p {
+                margin: 0 auto 30px;
+            }
+            
+            .hero-btns {
+                justify-content: center;
+            }
+            
+            .extension-hero-img {
+                width: 280px;
+                height: 280px;
+            }
+            
+            .contact-container {
+                flex-direction: column;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 40px;
+            }
+            
+            .extensions-grid, .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background-color: white;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+                box-shadow: 0 10px 10px rgba(0,0,0,0.1);
+                transform: translateY(-100%);
+                opacity: 0;
+                transition: var(--transition);
+                z-index: 999;
+            }
+            
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            
+            .hero-extensions h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 30px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero-btns {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .hero-extensions h1 {
+                font-size: 2rem;
+            }
+            
+            .extension-links {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header y Navegación -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo">
+                    <i class="r-icon"></i> Rubencho_80
+                </a>
+                
+                <div class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                
+                <div class="nav-links" id="navLinks">
+                    <a href="#inicio">Inicio</a>
+                    <a href="#extensiones">Extensiones</a>
+                    <a href="#contacto">Contacto</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section para Extensiones -->
+    <section class="hero-extensions" id="inicio">
+        <div class="container hero-container">
+            <div class="hero-left">
+                <h1>Mis <span>Extensiones</span></h1>
+                <h2>de Chrome Web Store</h2>
+                <p>Desarrollo extensiones para Google Chrome y juegos interactivos en Scratch. Explora mis proyectos y descubre extensiones que te ayudarán a descansar un rato mientras te diviertes.</p>
+                
+                <div class="hero-btns">
+                    <a href="#extensiones" class="btn">Ver Extensiones</a>
+                    <a href="https://rubencho80.github.io/" target="_blank" class="btn btn-outline">Sobre mí</a>
+                </div>
+            </div>
+            
+            <div class="hero-right">
+                <div class="profile-image-container">
+                    <img src="Perfil-2.jpg" alt="Foto de Rubén">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Extensiones de Chrome -->
+    <section class="extensions-showcase" id="extensiones">
+        <div class="container">
+            <h2 class="section-title">Mis Extensiones</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 30px;">Extensiones de Chrome Web Store, la mayoría desarrolladas en Scratch.</p>
+            
+            <div class="extensions-grid">
+                <!-- Ajedrez -->
+                <div class="extension-card">
+                    <div class="extension-carousel">
+                        <div class="carousel-container">
+                            <div class="carousel-slide active">
+                                <img src="1-1.png" alt="Scratch Game" class="carousel-img">
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="1-2.png" alt="Scratch Game" class="carousel-img">
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="1-3.png" alt="Scratch Game" class="carousel-img">
+                            </div>
+                            <button class="carousel-btn prev-btn">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="carousel-btn next-btn">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            <div class="carousel-dots">
+                                <span class="dot active"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="extension-content">
+                        <h3>Ajedrez</h3>
+                        <p>El Ajedrez recreado en Scratch. Puedes exportar/importar la partida y editarla a tu gusto añadiendo todas las piezas que quieras.</p>
+                        <br>
+                        <br>
+                        <div class="extension-links">
+                            <a href="https://chromewebstore.google.com/detail/ajedrez/nhcmnejjcaloilhbcfnfdjdahpgmjgdc" class="btn" target="_blank">Chrome Web Store</a>
+                            <button class="btn btn-details" data-scratch-url="https://scratch.mit.edu/projects/1009844940/embed">
+                                <i class="fas fa-bolt"></i> Jugar
+                            </button>
+                            <button class="btn btn-video" data-youtube-url="https://www.youtube.com/embed/SQeDcZ1qlz8?si=fi4Uf4x5ht2hGUql">
+                                <i class="fas fa-play"></i> Ver vídeo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Survive the Swarm -->
+                <div class="extension-card">
+                    <div class="extension-carousel">
+                        <div class="carousel-container">
+                            <div class="carousel-slide active">
+                                <img src="2-1.png" alt="Scratch Game" class="carousel-img">
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="2-2.png" alt="Scratch Game" class="carousel-img">
+                            </div>
+                            <button class="carousel-btn prev-btn">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="carousel-btn next-btn">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            <div class="carousel-dots">
+                                <span class="dot active"></span>
+                                <span class="dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="extension-content">
+                        <h3>Survive the Swarm</h3>
+                        <p>Se acerca una oleada interminable de enemigos. Evita que las naves enemigas toquen tu nave (bola blanca) y destrúyelas con tu escudo (punto verde). La nave se controla con WASD y el escudo con las flechas.</p>
+                        <div class="extension-links">
+                            <a href="https://chromewebstore.google.com/detail/survive-the-swarm/kpmocfoiefjgjlegpacmlbimodmcohog" class="btn" target="_blank">Chrome Web Store</a>
+                            <button class="btn btn-details" data-scratch-url="https://scratch.mit.edu/projects/1164701371/embed">
+                                <i class="fas fa-bolt"></i> Jugar
+                            </button>
+                            <button class="btn btn-video" data-youtube-url="https://www.youtube.com/embed/BEMbLKbXFQ8?si=7n7YoR9v8CtSxXQV">
+                                <i class="fas fa-play"></i> Ver vídeo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Generador de Laberintos -->
+                <div class="extension-card">
+                    <div class="extension-carousel">
+                        <div class="carousel-container">
+                            <div class="carousel-slide active">
+                                <img src="3-1.png" alt="Scratch Game" class="carousel-img">
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="3-2.png" alt="Scratch Game" class="carousel-img">
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="3-3.png" alt="Scratch Game" class="carousel-img">
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="3-4.png" alt="Scratch Game" class="carousel-img">
+                            </div>
+                            <button class="carousel-btn prev-btn">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="carousel-btn next-btn">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            <div class="carousel-dots">
+                                <span class="dot active"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="extension-content">
+                        <h3>Generador de Laberintos</h3>
+                        <p>Juego de laberintos aleatorios que tienes que completar moviendo la bola azul con las flechas o WASD. Puedes modificar la dificultad y el tamaño.</p>
+                        <div class="extension-links">
+                            <a href="https://chromewebstore.google.com/detail/generador-de-laberintos/mjkcaoahaidpmaienmkolcoeknblmfpb?hl=es" class="btn" target="_blank">Chrome Web Store</a>
+                            <button class="btn btn-details" data-scratch-url="https://scratch.mit.edu/projects/1002893250/embed">
+                                <i class="fas fa-bolt"></i> Jugar
+                            </button>
+                            <button class="btn btn-video" data-youtube-url="https://www.youtube.com/embed/RRq13bkpaBo?si=fAYlV_dNipwiDp4M">
+                                <i class="fas fa-play"></i> Ver vídeo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- QuickClicker -->
+                <div class="extension-card">
+                    <div class="extension-carousel">
+                        <div class="carousel-container">
+                            <div class="carousel-slide active">
+                                <img src="4-1.png" alt="Scratch Game" class="carousel-img">
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="4-2.png" alt="Scratch Game" class="carousel-img">
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="4-3.png" alt="Scratch Game" class="carousel-img">
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="4-4.png" alt="Scratch Game" class="carousel-img">
+                            </div>
+                            <button class="carousel-btn prev-btn">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="carousel-btn next-btn">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            <div class="carousel-dots">
+                                <span class="dot active"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="extension-content">
+                        <h3>QuickClicker</h3>
+                        <p>Busca elementos clicables según lo que escribes y los activa con Enter/Tab. Mejora tu productividad navegando sin mouse.</p>
+                        <div class="extension-links">
+                            <a href="https://chromewebstore.google.com/detail/quickclicker/bfccelfnbmjbbpoffhbcjjijpoifnnjj" class="btn" target="_blank">Chrome Web Store</a>
+                            <button class="btn btn-video" data-youtube-url="https://www.youtube.com/embed/YF9PzXawu2E?si=GokkWDnl-mOtU3Hr">
+                                <i class="fas fa-play"></i> Ver vídeo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Maze Game -->
+                <div class="extension-card">
+                    <div class="extension-carousel">
+                        <div class="carousel-container">
+                            <div class="carousel-slide active">
+                                <img src="5.png" alt="Scratch Game" class="carousel-img">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="extension-content">
+                        <h3>Maze Game</h3>
+                        <p>Un juego de laberintos aleatorios que tienes que completar moviendo la bola con las flechas o WASD. Puedes modificar la dificultad y el tamaño.</p>
+                        <div class="extension-links">
+                            <a href="https://chromewebstore.google.com/detail/maze-game/mjmgobhpkmffcbnnhpccldnjkclipcmi" class="btn" target="_blank">Chrome Web Store</a>
+                            <button class="btn btn-video" data-youtube-url="https://www.youtube.com/embed/UuR4thnxvqw?si=47iL0uh_nb9WzzFY">
+                                <i class="fas fa-play"></i> Ver vídeo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Piedra, Papel o Tijera -->
+                <div class="extension-card">
+                    <div class="extension-carousel">
+                        <div class="carousel-container">
+                            <div class="carousel-slide active">
+                                <img src="6.png" alt="Scratch Game" class="carousel-img">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="extension-content">
+                        <h3>Piedra, Papel o Tijera</h3>
+                        <p>Simulación del juego Piedra, Papel o Tijera donde cada objeto va a por su contrincante.</p>
+                        <div class="extension-links">
+                            <a href="https://chromewebstore.google.com/detail/piedra-papel-o-tijera/mamdjmlippidjejfkggahjppockjceng" class="btn" target="_blank">Chrome Web Store</a>
+                            <button class="btn btn-details" data-scratch-url="https://scratch.mit.edu/projects/955770232/embed">
+                                <i class="fas fa-bolt"></i> Jugar
+                            </button>
+                            <button class="btn btn-video" data-youtube-url="https://www.youtube.com/embed/dQWzGn7ByRU?si=WVvgec8YlSG-t56B">
+                                <i class="fas fa-play"></i> Ver vídeo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contacto -->
+    <section class="contact" id="contacto">
+        <div class="container">
+            <h2 class="section-title">Contacto</h2>
+            
+            <div class="contact-container">
+                <div class="contact-info" style="margin-top: 8;">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 8;">Correo electrónico</h4>
+                            <a href="mailto:ruben.valverde.anana@gmail.com" target="_blank" rel="noopener noreferrer">ruben.valverde.anana@gmail.com</a>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 8;">Scratch</h4>
+                            <a href="https://scratch.mit.edu/users/Ruben_80/" target="_blank" rel="noopener noreferrer">Ruben_80</a>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fab fa-discord"></i>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 8;">Discord</h4>
+                            <a href="http://discordapp.com/users/1062397431037308970" target="_blank" rel="noopener noreferrer">Rubencho_80</a>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fab fa-github"></i>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 8;">GitHub</h4>
+                            <a href="https://github.com/Rubencho80" target="_blank" rel="noopener noreferrer">Rubencho80</a>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <div class="contact-form">
+                    <h3>Envíame un mensaje</h3>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <input type="text" id="name" placeholder="Tu nombre" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <input type="email" id="email" placeholder="Tu correo electrónico" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <input type="text" id="subject" placeholder="Asunto del mensaje" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <textarea id="message" placeholder="Tu mensaje" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn">Enviar mensaje</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <a class="footer-logo">
+                        <i class="fas fa-code"></i> Rubencho_80
+                    </a>
+                    <p>Desarrollador creando proyectos en Scratch y extensiones de Chrome Web Store.</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2026 Rubencho_80. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal para ver proyectos de Scratch -->
+    <div class="scratch-modal" id="scratchModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h3 id="modalTitle">Proyecto de Scratch</h3>
+            </div>
+            <div class="modal-body">
+                <div class="scratch-embed-container">
+                    <iframe id="scratchIframe" 
+                            src="" 
+                            allowtransparency="true" 
+                            width="100%" 
+                            height="500" 
+                            frameborder="0" 
+                            scrolling="no"
+                            allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="modal-footer">
+                    <p>Proyecto cargado desde Scratch. Puedes interactuar con él directamente arriba.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para ver videos de YouTube -->
+    <div class="youtube-modal" id="youtubeModal">
+        <div class="modal-overlay" id="youtubeModalOverlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="youtubeModalClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h3 id="youtubeModalTitle">Video del Proyecto</h3>
+            </div>
+            <div class="modal-body">
+                <div class="youtube-embed-container">
+                    <iframe id="youtubeIframe" 
+                            src="" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="modal-footer">
+                    <p>Video cargado desde YouTube. Puedes verlo en pantalla completa.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para imágenes ampliadas del carrusel -->
+    <div class="image-modal" id="imageModal">
+        <div class="image-modal-overlay" id="imageModalOverlay"></div>
+        <div class="image-modal-content">
+            <button class="image-modal-close" id="imageModalClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <img id="expandedImage" src="" alt="Imagen ampliada" class="expanded-image">
+        </div>
+    </div>
+
+    <script>
+        // Menú hamburguesa para móviles
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+        
+        // Cerrar menú al hacer clic en un enlace
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+        
+        // Formulario de contacto que abre Gmail
+        const contactForm = document.getElementById('contactForm');
+        
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Obtener valores del formulario
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            
+            // Validar que todos los campos estén completos
+            if (!name || !email || !subject || !message) {
+                alert('Por favor, completa todos los campos del formulario.');
+                return;
+            }
+            
+            // Construir el enlace para Gmail
+            const encodedSubject = encodeURIComponent(subject);
+            const encodedBody = encodeURIComponent(
+                `Hola Rubén,\n\n${message}\n\nAtentamente,\n${name}\n${email}`
+            );
+            
+            // Crear el enlace de Gmail
+            const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=ruben.valverde.arana@gmail.com&su=${encodedSubject}&body=${encodedBody}`;
+            
+            // Abrir Gmail en una nueva pestaña
+            window.open(gmailLink, '_blank');
+
+            // Opcional: Resetear el formulario
+            contactForm.reset();
+        });
+        
+        // Sistema de carruseles
+        class Carousel {
+            constructor(container) {
+                this.container = container;
+                this.slides = container.querySelectorAll('.carousel-slide');
+                this.dots = container.querySelectorAll('.dot');
+                this.prevBtn = container.querySelector('.prev-btn');
+                this.nextBtn = container.querySelector('.next-btn');
+                this.currentIndex = 0;
+                this.interval = null;
+                this.autoPlayDelay = 3000; // 2 segundos
+                
+                this.init();
+            }
+            
+            init() {
+                // Configurar botones
+                if (this.prevBtn) {
+                    this.prevBtn.addEventListener('click', () => this.prevSlide());
+                }
+                
+                if (this.nextBtn) {
+                    this.nextBtn.addEventListener('click', () => this.nextSlide());
+                }
+                
+                // Configurar dots
+                this.dots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => this.goToSlide(index));
+                });
+                
+                // Iniciar autoplay
+                this.startAutoPlay();
+                
+                // Pausar autoplay al interactuar
+                this.container.addEventListener('mouseenter', () => this.stopAutoPlay());
+                this.container.addEventListener('mouseleave', () => this.startAutoPlay());
+            }
+            
+            showSlide(index) {
+                if (index < 0) {
+                    index = this.slides.length - 1;
+                } else if (index >= this.slides.length) {
+                    index = 0;
+                }
+                
+                this.slides.forEach(slide => {
+                    slide.classList.remove('active');
+                });
+                
+                this.slides[index].classList.add('active');
+                
+                this.dots.forEach(dot => {
+                    dot.classList.remove('active');
+                });
+                
+                if (this.dots[index]) {
+                    this.dots[index].classList.add('active');
+                }
+                
+                this.currentIndex = index;
+            }
+            
+            nextSlide() {
+                this.showSlide(this.currentIndex + 1);
+                this.restartAutoPlay();
+            }
+            
+            prevSlide() {
+                this.showSlide(this.currentIndex - 1);
+                this.restartAutoPlay();
+            }
+            
+            goToSlide(index) {
+                this.showSlide(index);
+                this.restartAutoPlay();
+            }
+            
+            startAutoPlay() {
+                if (this.interval) return;
+                
+                this.interval = setInterval(() => {
+                    this.nextSlide();
+                }, this.autoPlayDelay);
+            }
+            
+            stopAutoPlay() {
+                if (this.interval) {
+                    clearInterval(this.interval);
+                    this.interval = null;
+                }
+            }
+            
+            restartAutoPlay() {
+                this.stopAutoPlay();
+                this.startAutoPlay();
+            }
+        }
+        
+        // Inicializar todos los carruseles cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', () => {
+            const carouselContainers = document.querySelectorAll('.carousel-container');
+            
+            carouselContainers.forEach(container => {
+                new Carousel(container);
+            });
+        });
+        
+        // Efecto de aparición al hacer scroll
+        const observerOptions = {
+            threshold: 0.1
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Aplicar animación a las secciones
+        document.querySelectorAll('section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            observer.observe(section);
+        });
+
+        // Sistema para modal de Scratch
+        const scratchModal = document.getElementById('scratchModal');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalClose = document.getElementById('modalClose');
+        const scratchIframe = document.getElementById('scratchIframe');
+        const modalTitle = document.getElementById('modalTitle');
+
+        // Obtener todos los botones de Jugar
+        const detailButtons = document.querySelectorAll('.btn-details');
+
+        // Añadir evento a cada botón de Jugar
+        detailButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Obtener la URL de Scratch desde el atributo data
+                const scratchUrl = button.getAttribute('data-scratch-url');
+                
+                // Obtener el título de la extensión
+                const extensionTitle = button.closest('.extension-content').querySelector('h3').textContent;
+                
+                // Actualizar el modal con la información
+                modalTitle.textContent = `${extensionTitle} - Proyecto Scratch`;
+                scratchIframe.src = scratchUrl;
+                
+                // Mostrar el modal
+                scratchModal.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevenir scroll en el fondo
+            });
+        });
+
+        // Cerrar modal al hacer clic en la X
+        modalClose.addEventListener('click', () => {
+            closeModal();
+        });
+
+        // Cerrar modal al hacer clic fuera del contenido
+        modalOverlay.addEventListener('click', () => {
+            closeModal();
+        });
+
+        // Cerrar modal con tecla ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && scratchModal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        // Función para cerrar el modal
+        function closeModal() {
+            scratchModal.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Restaurar scroll
+            
+            // Detener el iframe para que deje de ejecutar el proyecto
+            setTimeout(() => {
+                scratchIframe.src = '';
+            }, 300);
+        }
+
+        // Prevenir que clics dentro del modal cierren el modal
+        document.querySelector('.modal-content').addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Sistema para modal de YouTube
+        const youtubeModal = document.getElementById('youtubeModal');
+        const youtubeModalOverlay = document.getElementById('youtubeModalOverlay');
+        const youtubeModalClose = document.getElementById('youtubeModalClose');
+        const youtubeIframe = document.getElementById('youtubeIframe');
+        const youtubeModalTitle = document.getElementById('youtubeModalTitle');
+
+        // Obtener todos los botones de ver vídeo
+        const videoButtons = document.querySelectorAll('.btn-video');
+
+        // Añadir evento a cada botón de ver vídeo
+        videoButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Obtener la URL de YouTube desde el atributo data
+                const youtubeUrl = button.getAttribute('data-youtube-url');
+                
+                // Obtener el título del proyecto
+                const projectTitle = button.closest('.extension-content').querySelector('h3').textContent;
+                
+                // Actualizar el modal con la información
+                youtubeModalTitle.textContent = `${projectTitle} - Video`;
+                youtubeIframe.src = youtubeUrl;
+                
+                // Mostrar el modal
+                youtubeModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        // Cerrar modal de YouTube al hacer clic en la X
+        youtubeModalClose.addEventListener('click', () => {
+            closeYoutubeModal();
+        });
+
+        // Cerrar modal de YouTube al hacer clic fuera del contenido
+        youtubeModalOverlay.addEventListener('click', () => {
+            closeYoutubeModal();
+        });
+
+        // Cerrar modal de YouTube con tecla ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && youtubeModal.classList.contains('active')) {
+                closeYoutubeModal();
+            }
+        });
+
+        // Función para cerrar el modal de YouTube
+        function closeYoutubeModal() {
+            youtubeModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            
+            // Detener el video de YouTube
+            setTimeout(() => {
+                youtubeIframe.src = '';
+            }, 300);
+        }
+
+        // Prevenir que clics dentro del contenido del modal de YouTube lo cierren
+        document.querySelector('.youtube-modal .modal-content').addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Sistema para modal de imágenes ampliadas
+        const imageModal = document.getElementById('imageModal');
+        const imageModalOverlay = document.getElementById('imageModalOverlay');
+        const imageModalClose = document.getElementById('imageModalClose');
+        const expandedImage = document.getElementById('expandedImage');
+
+        // Variable para guardar todas las imágenes del carrusel actual
+        let currentCarouselImages = [];
+        let currentImageIndex = 0;
+
+        // Función para abrir el modal de imagen con la imagen actual del carrusel
+        function openImageModal(carouselContainer, clickedImg = null) {
+            // Obtener todas las imágenes del carrusel
+            const slides = carouselContainer.querySelectorAll('.carousel-slide');
+            const images = [];
+            
+            slides.forEach(slide => {
+                const imgElement = slide.querySelector('img.carousel-img');
+                if (imgElement) {
+                    images.push({
+                        src: imgElement.src,
+                        alt: imgElement.alt
+                    });
+                }
+            });
+            
+            // Si no hay imágenes, salir
+            if (images.length === 0) return;
+            
+            // Guardar las imágenes y determinar cuál mostrar
+            currentCarouselImages = images;
+            
+            if (clickedImg) {
+                // Encontrar el índice de la imagen clickeada
+                const clickedSrc = clickedImg.src;
+                currentImageIndex = images.findIndex(img => img.src === clickedSrc);
+                if (currentImageIndex === -1) currentImageIndex = 0;
+            } else {
+                // Mostrar la imagen activa (por defecto)
+                const activeSlide = carouselContainer.querySelector('.carousel-slide.active');
+                if (activeSlide) {
+                    const activeImg = activeSlide.querySelector('img.carousel-img');
+                    if (activeImg) {
+                        const activeSrc = activeImg.src;
+                        currentImageIndex = images.findIndex(img => img.src === activeSrc);
+                        if (currentImageIndex === -1) currentImageIndex = 0;
+                    }
+                }
+            }
+            
+            // Mostrar la primera imagen
+            showImageInModal(currentImageIndex);
+            
+            // Mostrar el modal
+            imageModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Añadir eventos de teclado para navegar entre imágenes
+            document.addEventListener('keydown', handleImageModalKeyboard);
+        }
+
+        // Función para mostrar una imagen específica en el modal
+        function showImageInModal(index) {
+            if (currentCarouselImages.length === 0 || index < 0 || index >= currentCarouselImages.length) return;
+            
+            const imageData = currentCarouselImages[index];
+            expandedImage.src = imageData.src;
+            expandedImage.alt = imageData.alt;
+            currentImageIndex = index;
+        }
+
+        // Función para navegar entre imágenes con teclado
+        function handleImageModalKeyboard(e) {
+            if (!imageModal.classList.contains('active')) return;
+            
+            switch(e.key) {
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    showPreviousImage();
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    showNextImage();
+                    break;
+                case 'Escape':
+                    e.preventDefault();
+                    closeImageModal();
+                    break;
+            }
+        }
+
+        // Función para mostrar la imagen anterior
+        function showPreviousImage() {
+            if (currentCarouselImages.length === 0) return;
+            
+            let newIndex = currentImageIndex - 1;
+            if (newIndex < 0) {
+                newIndex = currentCarouselImages.length - 1; // Ir a la última imagen
+            }
+            
+            showImageInModal(newIndex);
+        }
+
+        // Función para mostrar la siguiente imagen
+        function showNextImage() {
+            if (currentCarouselImages.length === 0) return;
+            
+            let newIndex = currentImageIndex + 1;
+            if (newIndex >= currentCarouselImages.length) {
+                newIndex = 0; // Volver a la primera imagen
+            }
+            
+            showImageInModal(newIndex);
+        }
+
+        // Función para cerrar el modal de imágenes
+        function closeImageModal() {
+            imageModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            
+            // Limpiar después de cerrar
+            setTimeout(() => {
+                expandedImage.src = '';
+                expandedImage.alt = '';
+                currentCarouselImages = [];
+                currentImageIndex = 0;
+                
+                // Remover el event listener del teclado
+                document.removeEventListener('keydown', handleImageModalKeyboard);
+            }, 300);
+        }
+
+        // Cerrar modal al hacer clic en la X
+        imageModalClose.addEventListener('click', closeImageModal);
+
+        // Cerrar modal al hacer clic fuera de la imagen
+        imageModalOverlay.addEventListener('click', (e) => {
+            if (e.target === imageModalOverlay) {
+                closeImageModal();
+            }
+        });
+
+        // Navegación por clic en la imagen (siguiente imagen al hacer clic en la derecha, anterior en la izquierda)
+        expandedImage.addEventListener('click', (e) => {
+            const imgRect = expandedImage.getBoundingClientRect();
+            const clickX = e.clientX - imgRect.left;
+            const imgWidth = imgRect.width;
+            
+            // Si se hace clic en el tercio derecho, siguiente imagen
+            if (clickX > imgWidth * 2/3) {
+                showNextImage();
+            }
+            // Si se hace clic en el tercio izquierdo, imagen anterior
+            else if (clickX < imgWidth * 1/3) {
+                showPreviousImage();
+            }
+            // Si se hace clic en el centro, no hacer nada (o podrías cerrar el modal si prefieres)
+        });
+
+        // Añadir event listeners a todos los carruseles
+        document.addEventListener('DOMContentLoaded', () => {
+            const carouselContainers = document.querySelectorAll('.carousel-container');
+            
+            carouselContainers.forEach(container => {
+                // Hacer clic en el contenedor del carrusel (excepto en los botones)
+                container.addEventListener('click', (e) => {
+                    // Evitar que se abra si se hace clic en los botones de navegación o puntos
+                    if (e.target.closest('.carousel-btn') || e.target.closest('.dot')) {
+                        return;
+                    }
+                    
+                    // Verificar si se hizo clic en una imagen directamente
+                    const clickedImg = e.target.closest('img.carousel-img');
+                    
+                    // Abrir el modal de imágenes
+                    openImageModal(container, clickedImg);
+                });
+                
+                // También permitir abrir con Enter cuando la imagen tiene foco (accesibilidad)
+                container.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && e.target.classList.contains('carousel-img')) {
+                        openImageModal(container, e.target);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
