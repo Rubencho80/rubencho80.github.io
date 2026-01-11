@@ -1584,5 +1584,481 @@
         </div>
     </div>
 
+    <script>
+        // Menú hamburguesa para móviles
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Cerrar menú al hacer clic en un enlace
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Formulario de contacto que abre Gmail
+        const contactForm = document.getElementById('contactForm');
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Obtener valores del formulario
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            
+            // Validar que todos los campos estén completos
+            if (!name || !email || !subject || !message) {
+                alert('Por favor, completa todos los campos del formulario.');
+                return;
+            }
+            
+            // Construir el enlace para Gmail
+            // Codificar los valores para URL
+            const encodedSubject = encodeURIComponent(subject);
+            const encodedBody = encodeURIComponent(
+                `Hola Rubén,\n\n${message}\n\nAtentamente,\n${name}\n${email}`
+            );
+            
+            const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=ruben.valverde.arana@gmail.com&su=${encodedSubject}&body=${encodedBody}`;
+            
+            window.open(gmailLink, '_blank');
+            
+            contactForm.reset();
+        });
+
+        // Efecto de aparición al hacer scroll
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Aplicar animación a las secciones
+        document.querySelectorAll('section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            observer.observe(section);
+        });
+
+        // Sistema de carruseles
+        class Carousel {
+            constructor(container) {
+                this.container = container;
+                this.slides = container.querySelectorAll('.carousel-slide');
+                this.dots = container.querySelectorAll('.dot');
+                this.prevBtn = container.querySelector('.prev-btn');
+                this.nextBtn = container.querySelector('.next-btn');
+                this.currentIndex = 0;
+                this.interval = null;
+                this.autoPlayDelay = 3000; // 3 segundos
+                
+                this.init();
+            }
+            
+            init() {
+                // Configurar botones
+                if (this.prevBtn) {
+                    this.prevBtn.addEventListener('click', () => this.prevSlide());
+                }
+                
+                if (this.nextBtn) {
+                    this.nextBtn.addEventListener('click', () => this.nextSlide());
+                }
+                
+                // Configurar dots
+                this.dots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => this.goToSlide(index));
+                });
+                
+                // Iniciar autoplay
+                this.startAutoPlay();
+                
+                // Pausar autoplay al interactuar
+                this.container.addEventListener('mouseenter', () => this.stopAutoPlay());
+                this.container.addEventListener('mouseleave', () => this.startAutoPlay());
+                
+                // Pausar autoplay al tocar en dispositivos táctiles
+                this.container.addEventListener('touchstart', () => this.stopAutoPlay());
+                this.container.addEventListener('touchend', () => {
+                    setTimeout(() => this.startAutoPlay(), 5000);
+                });
+            }
+            
+            showSlide(index) {
+                // Asegurar que el índice esté dentro de los límites
+                if (index < 0) {
+                    index = this.slides.length - 1;
+                } else if (index >= this.slides.length) {
+                    index = 0;
+                }
+                
+                // Ocultar todas las slides
+                this.slides.forEach(slide => {
+                    slide.classList.remove('active');
+                });
+                
+                // Mostrar la slide actual
+                this.slides[index].classList.add('active');
+                
+                // Actualizar dots
+                this.dots.forEach(dot => {
+                    dot.classList.remove('active');
+                });
+                
+                if (this.dots[index]) {
+                    this.dots[index].classList.add('active');
+                }
+                
+                this.currentIndex = index;
+            }
+            
+            nextSlide() {
+                this.showSlide(this.currentIndex + 1);
+                this.restartAutoPlay();
+            }
+            
+            prevSlide() {
+                this.showSlide(this.currentIndex - 1);
+                this.restartAutoPlay();
+            }
+            
+            goToSlide(index) {
+                this.showSlide(index);
+                this.restartAutoPlay();
+            }
+            
+            startAutoPlay() {
+                // Si ya hay un intervalo activo, no crear otro
+                if (this.interval) return;
+                
+                this.interval = setInterval(() => {
+                    this.nextSlide();
+                }, this.autoPlayDelay);
+            }
+            
+            stopAutoPlay() {
+                if (this.interval) {
+                    clearInterval(this.interval);
+                    this.interval = null;
+                }
+            }
+            
+            restartAutoPlay() {
+                this.stopAutoPlay();
+                this.startAutoPlay();
+            }
+        }
+
+        // Inicializar todos los carruseles cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', () => {
+            const carouselContainers = document.querySelectorAll('.carousel-container');
+            
+            carouselContainers.forEach(container => {
+                new Carousel(container);
+            });
+        });
+
+        // Sistema de Cookies para Google Analytics
+        class CookiesManager {
+            constructor() {
+                this.cookieName = 'rubencho80_cookies_consent';
+                this.gaMeasurementId = 'G-1NPQ8QJ46Q'; // ID DE ANALYTICS
+                
+                // Elementos del DOM
+                this.cookiesBanner = document.getElementById('cookiesBanner');
+                this.acceptBtn = document.getElementById('acceptCookies');
+                this.rejectBtn = document.getElementById('rejectCookies');
+                this.cookiesModal = document.getElementById('cookiesModal');
+                this.cookiesModalClose = document.getElementById('cookiesModalClose');
+                this.closeCookiesModalBtn = document.getElementById('closeCookiesModal');
+                this.cookiesModalOverlay = document.getElementById('cookiesModalOverlay');
+                this.cookiesPolicyLink = document.getElementById('cookiesPolicyLink');
+                this.privacyPolicyLink = document.getElementById('privacyPolicyLink');
+                
+                this.init();
+            }
+            
+            init() {
+                // Verificar si ya hay una decisión guardada
+                const consent = this.getConsent();
+                
+                if (consent === null) {
+                    // No hay decisión, mostrar banner después de 1 segundo
+                    setTimeout(() => {
+                        this.showBanner();
+                    }, 1000);
+                } else if (consent === 'accepted') {
+                    // Ya aceptó, cargar Analytics
+                    this.loadGoogleAnalytics();
+                }
+                // Si rechazó, no hacer nada
+                
+                // Configurar event listeners
+                this.setupEventListeners();
+            }
+            
+            setupEventListeners() {
+                // Guardar referencia al contexto actual
+                const self = this;
+                
+                // Botones del banner
+                this.acceptBtn.addEventListener('click', () => this.handleAccept());
+                this.rejectBtn.addEventListener('click', () => this.handleReject());
+                
+                // Modal de política de cookies
+                this.cookiesPolicyLink?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showCookiesModal();
+                });
+                
+                this.privacyPolicyLink?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showCookiesModal();
+                });
+                
+                this.cookiesModalClose?.addEventListener('click', () => this.hideCookiesModal());
+                this.closeCookiesModalBtn?.addEventListener('click', () => this.hideCookiesModal());
+                this.cookiesModalOverlay?.addEventListener('click', () => this.hideCookiesModal());
+                
+                // Botón para resetear cookies (en el footer)
+                const resetCookiesBtn = document.getElementById('resetCookiesBtn');
+                if (resetCookiesBtn) {
+                    resetCookiesBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        self.resetConsent(); // Usar 'self' en lugar de 'this'
+                    });
+                }
+                
+                // Cerrar modal con ESC
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && this.cookiesModal.classList.contains('active')) {
+                        this.hideCookiesModal();
+                    }
+                });
+            }
+            
+            showBanner() {
+                this.cookiesBanner.classList.add('active');
+            }
+            
+            hideBanner() {
+                this.cookiesBanner.classList.remove('active');
+            }
+            
+            showCookiesModal() {
+                this.cookiesModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            hideCookiesModal() {
+                this.cookiesModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+            
+            handleAccept() {
+                this.saveConsent('accepted');
+                this.hideBanner();
+                this.loadGoogleAnalytics();
+                this.showConfirmation('Cookies aceptadas correctamente');
+            }
+            
+            handleReject() {
+                this.saveConsent('rejected');
+                this.hideBanner();
+                this.showConfirmation('Cookies analíticas rechazadas');
+            }
+            
+            saveConsent(decision) {
+                // Guardar en localStorage con expiración de 1 año
+                const consentData = {
+                    decision: decision,
+                    date: new Date().toISOString(),
+                    expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString() // 1 año
+                };
+                
+                localStorage.setItem(this.cookieName, JSON.stringify(consentData));
+                
+                // También en cookie por si acaso (dura 365 días)
+                document.cookie = `${this.cookieName}=${decision}; max-age=${365 * 24 * 60 * 60}; path=/; SameSite=Lax`;
+            }
+            
+            getConsent() {
+                // Intentar obtener de localStorage primero
+                const saved = localStorage.getItem(this.cookieName);
+                
+                if (saved) {
+                    try {
+                        const data = JSON.parse(saved);
+                        // Verificar si ha expirado
+                        if (new Date(data.expires) > new Date()) {
+                            return data.decision;
+                        } else {
+                            // Ha expirado, borrar
+                            localStorage.removeItem(this.cookieName);
+                            return null;
+                        }
+                    } catch (e) {
+                        // Error al parsear
+                        localStorage.removeItem(this.cookieName);
+                    }
+                }
+                
+                // Si no hay en localStorage, buscar en cookies
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    const [name, value] = cookie.trim().split('=');
+                    if (name === this.cookieName) {
+                        return value;
+                    }
+                }
+                
+                return null; // No hay decisión guardada
+            }
+            
+            loadGoogleAnalytics() {
+                // SOLO cargar Analytics si el usuario aceptó
+                
+                // Cargar script de Google Analytics
+                const script1 = document.createElement('script');
+                script1.async = true;
+                script1.src = `https://www.googletagmanager.com/gtag/js?id=${this.gaMeasurementId}`;
+                document.head.appendChild(script1);
+                
+                // Configurar gtag
+                const script2 = document.createElement('script');
+                script2.textContent = `
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+                    gtag('config', '${this.gaMeasurementId}', {
+                        'anonymize_ip': true,
+                        'allow_google_signals': false,
+                        'allow_ad_personalization_signals': false
+                    });
+                `;
+                document.head.appendChild(script2);
+            }
+            
+            showConfirmation(message) {
+                // Mostrar un mensaje de confirmación temporal
+                const confirmation = document.createElement('div');
+                confirmation.className = 'cookies-confirmation';
+                confirmation.textContent = message;
+                confirmation.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    background-color: var(--primary-color);
+                    color: white;
+                    padding: 12px 20px;
+                    border-radius: var(--border-radius);
+                    z-index: 10001;
+                    animation: slideInRight 0.3s ease;
+                    box-shadow: var(--shadow);
+                `;
+                
+                document.body.appendChild(confirmation);
+                
+                // Remover después de 3 segundos
+                setTimeout(() => {
+                    confirmation.style.animation = 'slideOutRight 0.3s ease';
+                    setTimeout(() => {
+                        document.body.removeChild(confirmation);
+                    }, 300);
+                }, 3000);
+            }
+            
+            // Método para cambiar la decisión (botón en el footer)
+            resetConsent() {
+                localStorage.removeItem(this.cookieName);
+                document.cookie = `${this.cookieName}=; max-age=0; path=/`;
+                this.showBanner();
+            }
+        }
+
+        // Modal de privacidad
+        const privacyModal = document.getElementById('privacyModal');
+        const privacyModalClose = document.getElementById('privacyModalClose');
+        const closePrivacyModalBtn = document.getElementById('closePrivacyModal');
+        const privacyModalOverlay = document.getElementById('privacyModalOverlay');
+
+        // Abrir modal de privacidad desde el enlace del footer
+        const privacyPolicyFooterLink = document.getElementById('privacyPolicyFooterLink');
+        if (privacyPolicyFooterLink) {
+            privacyPolicyFooterLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                privacyModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        }
+
+        // Cerrar modal de privacidad
+        if (privacyModalClose) {
+            privacyModalClose.addEventListener('click', () => {
+                privacyModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+        }
+
+        if (closePrivacyModalBtn) {
+            closePrivacyModalBtn.addEventListener('click', () => {
+                privacyModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+        }
+
+        if (privacyModalOverlay) {
+            privacyModalOverlay.addEventListener('click', () => {
+                privacyModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+        }
+
+        // Inicializar el gestor de cookies cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', () => {
+            const cookiesManager = new CookiesManager();
+            
+            // También podrías exponerlo globalmente para poder resetear desde la consola
+            window.cookiesManager = cookiesManager;
+        });
+
+        // Añadir estas animaciones al CSS si no existen
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // En el método setupEventListeners, añade:
+        const resetCookiesBtn = document.getElementById('resetCookiesBtn');
+        if (resetCookiesBtn) {
+            resetCookiesBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.resetConsent();
+            });
+        }
+    </script>
 </body>
 </html>
