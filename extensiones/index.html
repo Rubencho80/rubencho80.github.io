@@ -509,6 +509,36 @@
             align-items: center;
         }
 
+        /* Ajustes específicos para el modal de Scratch */
+        .scratch-modal .modal-content {
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .scratch-modal .modal-body {
+            flex: 1;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .scratch-modal .scratch-embed-container {
+            flex: 1;
+            min-height: 0; /* Importante para que funcione flex en contenedores anidados */
+        }
+
+        .scratch-modal .modal-footer {
+            padding: 15px 30px;
+            background-color: #f8fafc;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
         .modal-overlay {
             position: absolute;
             top: 0;
@@ -572,15 +602,22 @@
         }
 
         .scratch-embed-container {
+            position: relative;
             width: 100%;
-            height: 700px;
+            padding-bottom: 75%;
+            height: 0;
             overflow: hidden;
+            background-color: #f8fafc;
         }
 
         .scratch-embed-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             border: none;
+            border-radius: 8px;
         }
 
         .modal-footer {
@@ -1724,17 +1761,8 @@
                 <h3 id="modalTitle">Proyecto de Scratch</h3>
             </div>
             <div class="modal-body">
-                <div class="scratch-embed-container">
-                    <iframe id="scratchIframe" 
-                            src="" 
-                            allowtransparency="true" 
-                            width="100%" 
-                            height="500" 
-                            frameborder="0" 
-                            scrolling="no"
-                            allowfullscreen>
-                    </iframe>
-                </div>
+                <!-- Contenedor vacío donde se insertará el iframe dinámicamente -->
+                <div class="scratch-embed-container" id="scratchEmbedContainer"></div>
                 <div class="modal-footer">
                     <p>Proyecto cargado desde Scratch. Puedes interactuar con él directamente arriba.</p>
                 </div>
@@ -1801,7 +1829,7 @@
         </div>
     </div>
 
-    <!-- Modal para Política de Cookies (opcional) -->
+    <!-- Modal para Política de Cookies -->
     <div class="cookies-modal" id="cookiesModal">
         <div class="cookies-modal-overlay" id="cookiesModalOverlay"></div>
         <div class="cookies-modal-content">
@@ -2060,67 +2088,136 @@
             observer.observe(section);
         });
 
-        // Sistema para modal de Scratch
+        // Sistema para modal de Scratch - Versión corregida
         const scratchModal = document.getElementById('scratchModal');
         const modalOverlay = document.getElementById('modalOverlay');
         const modalClose = document.getElementById('modalClose');
-        const scratchIframe = document.getElementById('scratchIframe');
         const modalTitle = document.getElementById('modalTitle');
+        const scratchEmbedContainer = document.getElementById('scratchEmbedContainer');
 
-        // Obtener todos los botones de Jugar
+        // Variables para controlar el estado
+        let currentScratchUrl = '';
+        let isScratchModalOpen = false;
+
+        // Obtener todos los botones de detalles
         const detailButtons = document.querySelectorAll('.btn-details');
 
-        // Añadir evento a cada botón de Jugar
+        // Añadir evento a cada botón de detalles
         detailButtons.forEach(button => {
             button.addEventListener('click', () => {
                 // Obtener la URL de Scratch desde el atributo data
                 const scratchUrl = button.getAttribute('data-scratch-url');
                 
-                // Obtener el título de la extensión
-                const extensionTitle = button.closest('.extension-content').querySelector('h3').textContent;
+                // Obtener el título del proyecto
+                const projectTitle = button.closest('.extension-content').querySelector('h3').textContent;
                 
-                // Actualizar el modal con la información
-                modalTitle.textContent = `${extensionTitle} - Proyecto Scratch`;
-                scratchIframe.src = scratchUrl;
-                
-                // Mostrar el modal
-                scratchModal.classList.add('active');
-                document.body.style.overflow = 'hidden'; // Prevenir scroll en el fondo
+                // Abrir el modal
+                openScratchModal(scratchUrl, projectTitle);
             });
         });
 
-        // Cerrar modal al hacer clic en la X
-        modalClose.addEventListener('click', () => {
-            closeModal();
-        });
-
-        // Cerrar modal al hacer clic fuera del contenido
-        modalOverlay.addEventListener('click', () => {
-            closeModal();
-        });
-
-        // Cerrar modal con tecla ESC
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && scratchModal.classList.contains('active')) {
-                closeModal();
-            }
-        });
-
-        // Función para cerrar el modal
-        function closeModal() {
-            scratchModal.classList.remove('active');
-            document.body.style.overflow = 'auto'; // Restaurar scroll
+        // Función para abrir el modal de Scratch
+        function openScratchModal(scratchUrl, projectTitle) {
+            // Guardar la URL actual
+            currentScratchUrl = scratchUrl;
             
-            // Detener el iframe para que deje de ejecutar el proyecto
+            // Actualizar el título
+            modalTitle.textContent = `${projectTitle} - Proyecto Scratch`;
+            
+            // Limpiar el contenedor (esto es CRÍTICO para evitar errores)
+            scratchEmbedContainer.innerHTML = '';
+            
+            // Crear un nuevo iframe
+            const iframe = document.createElement('iframe');
+            iframe.id = 'scratchIframe';
+            iframe.src = scratchUrl;
+            iframe.setAttribute('allowtransparency', 'true');
+            iframe.setAttribute('frameborder', '0');
+            iframe.setAttribute('scrolling', 'no');
+            iframe.setAttribute('allowfullscreen', 'true');
+            
+            // Estilos para mantener la proporción 4:3
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            iframe.style.borderRadius = '8px';
+            
+            // Añadir el iframe al contenedor
+            scratchEmbedContainer.appendChild(iframe);
+            
+            // Mostrar el modal
+            scratchModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            isScratchModalOpen = true;
+            
+            // Añadir un pequeño retraso para asegurar que el iframe se carga correctamente
             setTimeout(() => {
-                scratchIframe.src = '';
+                iframe.focus();
+            }, 100);
+        }
+
+        // Función para cerrar el modal de Scratch
+        function closeScratchModal() {
+            scratchModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            isScratchModalOpen = false;
+            
+            // Limpiar el iframe de forma SEGURA
+            setTimeout(() => {
+                if (scratchEmbedContainer) {
+                    // 1. Remover el iframe del DOM
+                    const iframe = scratchEmbedContainer.querySelector('iframe');
+                    if (iframe) {
+                        // 2. Cambiar el src a about:blank para detener la ejecución
+                        iframe.src = 'about:blank';
+                        
+                        // 3. Remover todos los event listeners
+                        iframe.contentWindow?.location.replace('about:blank');
+                        
+                        // 4. Remover el iframe del DOM
+                        iframe.remove();
+                    }
+                    
+                    // 5. Limpiar el contenedor
+                    scratchEmbedContainer.innerHTML = '';
+                }
             }, 300);
         }
 
+        // Cerrar modal al hacer clic en la X
+        modalClose.addEventListener('click', closeScratchModal);
+
+        // Cerrar modal al hacer clic fuera del contenido
+        modalOverlay.addEventListener('click', closeScratchModal);
+
+        // Cerrar modal con tecla ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && isScratchModalOpen) {
+                closeScratchModal();
+            }
+        });
+
         // Prevenir que clics dentro del modal cierren el modal
-        document.querySelector('.modal-content').addEventListener('click', (e) => {
+        document.querySelector('.scratch-modal .modal-content').addEventListener('click', (e) => {
             e.stopPropagation();
         });
+
+        // Función para reiniciar completamente el modal (útil si hay problemas)
+        function resetScratchModal() {
+            closeScratchModal();
+            
+            // Limpiar completamente después de un segundo
+            setTimeout(() => {
+                currentScratchUrl = '';
+                if (scratchEmbedContainer) {
+                    scratchEmbedContainer.innerHTML = '';
+                }
+                console.log('Modal de Scratch reiniciado completamente');
+            }, 1000);
+        }
+
+        // Exponer la función para debugging
+        window.resetScratchModal = resetScratchModal;
 
         // Sistema para modal de YouTube
         const youtubeModal = document.getElementById('youtubeModal');
@@ -2654,4 +2751,3 @@
     </script>
 </body>
 </html>
-
