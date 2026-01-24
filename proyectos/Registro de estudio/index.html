@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Estudio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <!-- PWA meta tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#3498db">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
+    <!-- Para iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="TimeTracker">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem;
+            background-color: white;
+            flex-wrap: wrap;
+        }
+        
+        .view-btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            background-color: #ecf0f1;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .view-btn.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .view-btn:hover:not(.active) {
+            background-color: #d5dbdb;
+        }
+        
+        .utility-btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            background-color: #ecf0f1;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: #e74c3c;
+            margin-left: auto;
+        }
+        
+        .utility-btn:hover {
+            background-color: #fadbd8;
+        }
+        
+        .calendar-container {
+            flex: 1;
+            padding: 1rem;
+            overflow: auto;
+            background-color: white;
+            margin: 0 1rem 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        /* Estilos para el calendario*/
+        .month-calendar {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            grid-template-rows: auto repeat(6, minmax(80px, 1fr));
+            gap: 1px;
+            background-color: #ddd;
+            border: 1px solid #ddd;
+        }
+        
+        .week-calendar {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            grid-template-rows: auto minmax(100px, 1fr);
+            gap: 1px;
+            background-color: #ddd;
+            border: 1px solid #ddd;
+        }
+
+        .year-calendar {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-rows: repeat(3, minmax(80px, 1fr));
+            gap: 1px;
+            background-color: #ddd;
+            border: 1px solid #ddd;
+        }
+        
+        .calendar-header {
+            background-color: #3498db;
+            color: white;
+            text-align: center;
+            padding: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .calendar-cell {
+            background-color: white;
+            padding: 0.5rem;
+            position: relative;
+            overflow: hidden;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .calendar-cell.day-cell:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .day-number {
+            font-weight:500;
+            margin-bottom: 0.25rem;
+            font-size: 1.1rem;
+        }
+        
+        .month-name {
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 1rem;
+        }
+        
+        .current-day {
+            background-color: #e8f4fc;
+            border: 2px solid #3498db;
+        }
+        
+        .time-bar-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+        
+        .time-bar {
+            height: 100%;
+            background-color: #3498db;
+            transition: all 0.5s ease;
+            width: 0%;
+            opacity: 0.7;
+        }
+        
+        .time-info {
+            position: absolute;
+            bottom: 12px;
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            margin-top: 0.25rem;
+        }
+        
+        .button-container {
+            padding: 1.5rem;
+            text-align: center;
+            background-color: white;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .main-button {
+            padding: 1rem 3rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            color: white;
+            background-color: #3498db;
+        }
+        
+        .main-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .main-button:active {
+            transform: translateY(0);
+        }
+        
+        .main-button.active {
+            background-color: #e67e22;
+        }
+        
+        .timer-display {
+            margin-top: 0.5rem;
+            font-size: 1rem;
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+        
+        .nav-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem;
+            background-color: white;
+        }
+        
+        .nav-btn {
+            background-color: #ecf0f1;
+            border: none;
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-btn:hover {
+            background-color: #d5dbdb;
+        }
+        
+        .current-date-display {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 1200px) {
+            .month-calendar {
+                grid-template-rows: auto repeat(6, minmax(60px, 1fr));
+            }
+            
+            .calendar-cell {
+                min-height: 60px;
+                padding: 0.4rem;
+            }
+            
+            .day-number {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .month-calendar {
+                grid-template-rows: auto repeat(6, minmax(50px, 1fr));
+            }
+            
+            .calendar-cell {
+                min-height: 50px;
+                padding: 0.3rem;
+            }
+            
+            .day-number {
+                font-size: 0.9rem;
+            }
+            
+            .time-info {
+                font-size: 0.7rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .month-calendar {
+                grid-template-rows: auto repeat(6, minmax(40px, 1fr));
+            }
+            
+            .calendar-cell {
+                min-height: 40px;
+                padding: 0.2rem;
+            }
+            
+            .day-number {
+                font-size: 0.8rem;
+            }
+            
+            .time-info {
+                font-size: 0.6rem;
+                display: none; /* Opcional: oculta en móviles muy pequeños */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Registro de Tiempo</h1>
+    </header>
+    
+    <div class="controls">
+        <button class="view-btn active" data-view="month">Vista Mensual</button>
+        <button class="view-btn" data-view="week">Vista Semanal</button>
+        <button class="view-btn" data-view="year">Vista Anual</button>
+        <button class="utility-btn" id="clear-data-btn">Borrar Registros</button>
+    </div>
+    
+    <div class="nav-controls">
+        <button class="nav-btn" id="prev-btn">&larr; Anterior</button>
+        <div class="current-date-display" id="current-date">Junio 2023</div>
+        <button class="nav-btn" id="next-btn">Siguiente &rarr;</button>
+    </div>
+    
+    <div class="calendar-container">
+        <!-- Calendario mensual (vista por defecto) -->
+        <div id="month-calendar" class="month-calendar">
+            <!-- Se generará dinámicamente con JavaScript -->
+        </div>
+        
+        <!-- Calendario semanal -->
+        <div id="week-calendar" class="week-calendar hidden">
+            <!-- Se generará dinámicamente con JavaScript -->
+        </div>
+        
+        <!-- Calendario anual -->
+        <div id="year-calendar" class="year-calendar hidden">
+            <!-- Se generará dinámicamente con JavaScript -->
+        </div>
+    </div>
+    
+    <div class="button-container">
+        <button class="main-button" id="action-button">Comenzar</button>
+        <div class="timer-display" id="timer-display">Tiempo registrado hoy: 0h 0m 0s</div>
+    </div>
+
+    <script>
+        // Variables globales
+        let isTracking = false;
+        let startTime = null;
+        let timerInterval = null;
+        let currentView = 'month';
+        let currentDate = new Date();
+        
+        // Datos de ejemplo para el registro de tiempo
+        // En una aplicación real, esto se guardaría en localStorage o una base de datos
+        let timeData = {};
+        
+        // Nombres de meses y días
+        const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                           "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        
+        const dayNames = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+        
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cargar datos guardados (si existen)
+            loadSavedData();
+            
+            // Configurar botones de vista
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    switchView(this.dataset.view);
+                });
+            });
+            
+            // Configurar botón de acción principal
+            document.getElementById('action-button').addEventListener('click', toggleTracking);
+            
+            // Configurar botón para borrar registros
+            document.getElementById('clear-data-btn').addEventListener('click', clearAllData);
+            
+            // Configurar botones de navegación
+            document.getElementById('prev-btn').addEventListener('click', navigatePrevious);
+            document.getElementById('next-btn').addEventListener('click', navigateNext);
+            
+            // Renderizar calendario inicial
+            renderCalendar();
+            
+            // Actualizar la visualización del tiempo registrado hoy
+            updateTodayTimer();
+        });
+        
+        // Función para cambiar entre vistas
+        function switchView(view) {
+            currentView = view;
+            
+            // Actualizar botones activos
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.view === view) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Ocultar todos los calendarios
+            document.getElementById('month-calendar').classList.add('hidden');
+            document.getElementById('week-calendar').classList.add('hidden');
+            document.getElementById('year-calendar').classList.add('hidden');
+            
+            // Mostrar el calendario correspondiente
+            document.getElementById(`${view}-calendar`).classList.remove('hidden');
+            
+            // Actualizar el título de fecha
+            updateDateDisplay();
+            
+            // Renderizar el calendario con la nueva vista
+            renderCalendar();
+        }
+        
+        // Función para navegar al período anterior
+        function navigatePrevious() {
+            switch(currentView) {
+                case 'month':
+                    currentDate.setMonth(currentDate.getMonth() - 1);
+                    break;
+                case 'week':
+                    currentDate.setDate(currentDate.getDate() - 7);
+                    break;
+                case 'year':
+                    currentDate.setFullYear(currentDate.getFullYear() - 1);
+                    break;
+            }
+            renderCalendar();
+            updateDateDisplay();
+        }
+        
+        // Función para navegar al período siguiente
+        function navigateNext() {
+            switch(currentView) {
+                case 'month':
+                    currentDate.setMonth(currentDate.getMonth() + 1);
+                    break;
+                case 'week':
+                    currentDate.setDate(currentDate.getDate() + 7);
+                    break;
+                case 'year':
+                    currentDate.setFullYear(currentDate.getFullYear() + 1);
+                    break;
+            }
+            renderCalendar();
+            updateDateDisplay();
+        }
+        
+        // Función para actualizar la visualización de la fecha
+        function updateDateDisplay() {
+            const displayElement = document.getElementById('current-date');
+            
+            switch(currentView) {
+                case 'month':
+                    displayElement.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+                    break;
+                case 'week':
+                    // Calcular el inicio y fin de la semana
+                    const startOfWeek = new Date(currentDate);
+                    startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
+                    
+                    const endOfWeek = new Date(startOfWeek);
+                    endOfWeek.setDate(startOfWeek.getDate() + 6);
+                    
+                    // Formatear la visualización
+                    const startMonth = monthNames[startOfWeek.getMonth()];
+                    const endMonth = monthNames[endOfWeek.getMonth()];
+                    
+                    if (startOfWeek.getMonth() === endOfWeek.getMonth()) {
+                        displayElement.textContent = `${startMonth} ${startOfWeek.getDate()} - ${endOfWeek.getDate()}, ${startOfWeek.getFullYear()}`;
+                    } else {
+                        displayElement.textContent = `${startMonth} ${startOfWeek.getDate()} - ${endMonth} ${endOfWeek.getDate()}, ${startOfWeek.getFullYear()}`;
+                    }
+                    break;
+                case 'year':
+                    displayElement.textContent = currentDate.getFullYear();
+                    break;
+            }
+        }
+        
+        // Función para renderizar el calendario según la vista actual
+        function renderCalendar() {
+            switch(currentView) {
+                case 'month':
+                    renderMonthCalendar();
+                    break;
+                case 'week':
+                    renderWeekCalendar();
+                    break;
+                case 'year':
+                    renderYearCalendar();
+                    break;
+            }
+        }
+        
+        // Función para renderizar el calendario mensual
+        function renderMonthCalendar() {
+            const calendar = document.getElementById('month-calendar');
+            calendar.innerHTML = '';
+            
+            // Obtener información del mes actual
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const today = new Date();
+            
+            // Crear encabezados de días
+            dayNames.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'calendar-header';
+                header.textContent = day;
+                calendar.appendChild(header);
+            });
+            
+            // Obtener el primer día del mes y el último día del mes
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            
+            // Calcular el día de la semana del primer día (0 = Domingo, 1 = Lunes, etc.)
+            const firstDayOfWeek = firstDay.getDay();
+            
+            // Calcular el número total de días en el mes
+            const totalDays = lastDay.getDate();
+            
+            // Calcular el número de celdas necesarias (días del mes + espacios vacíos al inicio)
+            const totalCells = Math.ceil((totalDays + firstDayOfWeek) / 7) * 7;
+            
+            // Encontrar el tiempo máximo registrado en este mes para calcular porcentajes
+            let maxTimeInMonth = 0;
+            for (let day = 1; day <= totalDays; day++) {
+                const dateKey = `${year}-${month+1}-${day}`;
+                if (timeData[dateKey] && timeData[dateKey] > maxTimeInMonth) {
+                    maxTimeInMonth = timeData[dateKey];
+                }
+            }
+            
+            // Crear celdas del calendario
+            for (let i = 0; i < totalCells; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'calendar-cell day-cell';
+                
+                // Si está dentro del rango de días del mes
+                if (i >= firstDayOfWeek && i < firstDayOfWeek + totalDays) {
+                    const day = i - firstDayOfWeek + 1;
+                    const dateKey = `${year}-${month+1}-${day}`;
+                    const isToday = today.getFullYear() === year && 
+                                   today.getMonth() === month && 
+                                   today.getDate() === day;
+                    
+                    if (isToday) {
+                        cell.classList.add('current-day');
+                    }
+                    
+                    // Añadir número del día
+                    const dayNumber = document.createElement('div');
+                    dayNumber.className = 'day-number';
+                    dayNumber.textContent = day;
+                    cell.appendChild(dayNumber);
+                    
+                    // Añadir barra de tiempo si hay datos
+                    if (timeData[dateKey]) {
+                        const timeBarContainer = document.createElement('div');
+                        timeBarContainer.className = 'time-bar-container';
+                        
+                        const timeBar = document.createElement('div');
+                        timeBar.className = 'time-bar';
+                        
+                        // Calcular porcentaje basado en el tiempo máximo del mes
+                        const percentage = maxTimeInMonth > 0 ? (timeData[dateKey] / maxTimeInMonth) * 100 : 0;
+                        timeBar.style.width = `${percentage}%`;
+                        
+                        // Añadir información de tiempo
+                        const timeInfo = document.createElement('div');
+                        timeInfo.className = 'time-info';
+                        timeInfo.textContent = formatTime(timeData[dateKey]);
+                        
+                        timeBarContainer.appendChild(timeBar);
+                        cell.appendChild(timeBarContainer);
+                        cell.appendChild(timeInfo);
+                    }
+                }
+                
+                calendar.appendChild(cell);
+            }
+        }
+        
+        // Función para renderizar el calendario semanal
+        function renderWeekCalendar() {
+            const calendar = document.getElementById('week-calendar');
+            calendar.innerHTML = '';
+            
+            const today = new Date();
+            
+            // Crear encabezados de días
+            dayNames.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'calendar-header';
+                header.textContent = day;
+                calendar.appendChild(header);
+            });
+            
+            // Calcular el inicio de la semana (domingo)
+            const startOfWeek = new Date(currentDate);
+            startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
+            
+            // Encontrar el tiempo máximo registrado en esta semana para calcular porcentajes
+            let maxTimeInWeek = 0;
+            for (let i = 0; i < 7; i++) {
+                const day = new Date(startOfWeek);
+                day.setDate(startOfWeek.getDate() + i);
+                const dateKey = `${day.getFullYear()}-${day.getMonth()+1}-${day.getDate()}`;
+                
+                if (timeData[dateKey] && timeData[dateKey] > maxTimeInWeek) {
+                    maxTimeInWeek = timeData[dateKey];
+                }
+            }
+            
+            // Crear celdas para cada día de la semana
+            for (let i = 0; i < 7; i++) {
+                const day = new Date(startOfWeek);
+                day.setDate(startOfWeek.getDate() + i);
+                
+                const cell = document.createElement('div');
+                cell.className = 'calendar-cell day-cell';
+                
+                const isToday = today.getFullYear() === day.getFullYear() && 
+                               today.getMonth() === day.getMonth() && 
+                               today.getDate() === day.getDate();
+                
+                if (isToday) {
+                    cell.classList.add('current-day');
+                }
+                
+                // Añadir número del día
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = day.getDate();
+                cell.appendChild(dayNumber);
+                
+                // Añadir nombre del mes si es el primer día de la semana o si cambia de mes
+                if (i === 0 || day.getDate() === 1) {
+                    const monthName = document.createElement('div');
+                    monthName.className = 'month-name';
+                    monthName.textContent = monthNames[day.getMonth()];
+                    cell.appendChild(monthName);
+                }
+                
+                // Añadir barra de tiempo si hay datos
+                const dateKey = `${day.getFullYear()}-${day.getMonth()+1}-${day.getDate()}`;
+                if (timeData[dateKey]) {
+                    const timeBarContainer = document.createElement('div');
+                    timeBarContainer.className = 'time-bar-container';
+                    
+                    const timeBar = document.createElement('div');
+                    timeBar.className = 'time-bar';
+                    
+                    // Calcular porcentaje basado en el tiempo máximo de la semana
+                    const percentage = maxTimeInWeek > 0 ? (timeData[dateKey] / maxTimeInWeek) * 100 : 0;
+                    timeBar.style.width = `${percentage}%`;
+                    
+                    // Añadir información de tiempo
+                    const timeInfo = document.createElement('div');
+                    timeInfo.className = 'time-info';
+                    timeInfo.textContent = formatTime(timeData[dateKey]);
+                    
+                    timeBarContainer.appendChild(timeBar);
+                    cell.appendChild(timeBarContainer);
+                    cell.appendChild(timeInfo);
+                }
+                
+                calendar.appendChild(cell);
+            }
+        }
+        
+        // Función para renderizar el calendario anual
+        function renderYearCalendar() {
+            const calendar = document.getElementById('year-calendar');
+            calendar.innerHTML = '';
+            
+            const year = currentDate.getFullYear();
+            const today = new Date();
+            
+            // Encontrar el tiempo máximo registrado en cualquier mes del año para calcular porcentajes
+            let maxTimeInYear = 0;
+            for (let month = 0; month < 12; month++) {
+                // Para simplificar, sumaremos el tiempo de todos los días del mes
+                let monthTime = 0;
+                for (let day = 1; day <= 31; day++) {
+                    const dateKey = `${year}-${month+1}-${day}`;
+                    if (timeData[dateKey]) {
+                        monthTime += timeData[dateKey];
+                    }
+                }
+                if (monthTime > maxTimeInYear) {
+                    maxTimeInYear = monthTime;
+                }
+            }
+            
+            // Crear celdas para cada mes
+            for (let month = 0; month < 12; month++) {
+                const cell = document.createElement('div');
+                cell.className = 'calendar-cell';
+                
+                // Verificar si este mes es el actual
+                const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
+                
+                if (isCurrentMonth) {
+                    cell.classList.add('current-day');
+                }
+                
+                // Añadir nombre del mes
+                const monthName = document.createElement('div');
+                monthName.className = 'month-name';
+                monthName.textContent = monthNames[month];
+                cell.appendChild(monthName);
+                
+                // Calcular tiempo total del mes
+                let monthTime = 0;
+                for (let day = 1; day <= 31; day++) {
+                    const dateKey = `${year}-${month+1}-${day}`;
+                    if (timeData[dateKey]) {
+                        monthTime += timeData[dateKey];
+                    }
+                }
+                
+                // Añadir barra de tiempo si hay datos
+                if (monthTime > 0) {
+                    const timeBarContainer = document.createElement('div');
+                    timeBarContainer.className = 'time-bar-container';
+                    
+                    const timeBar = document.createElement('div');
+                    timeBar.className = 'time-bar';
+                    
+                    // Calcular porcentaje basado en el tiempo máximo del año
+                    const percentage = maxTimeInYear > 0 ? (monthTime / maxTimeInYear) * 100 : 0;
+                    timeBar.style.width = `${percentage}%`;
+                    
+                    // Añadir información de tiempo
+                    const timeInfo = document.createElement('div');
+                    timeInfo.className = 'time-info';
+                    timeInfo.textContent = formatTime(monthTime);
+                    
+                    timeBarContainer.appendChild(timeBar);
+                    cell.appendChild(timeBarContainer);
+                    cell.appendChild(timeInfo);
+                }
+                
+                calendar.appendChild(cell);
+            }
+        }
+        
+        // Función para alternar el seguimiento del tiempo
+        function toggleTracking() {
+            const button = document.getElementById('action-button');
+            
+            if (!isTracking) {
+                // Comenzar a contar
+                isTracking = true;
+                startTime = new Date();
+                button.textContent = 'Terminar';
+                button.classList.add('active');
+                
+                // Iniciar intervalo para actualizar el temporizador en pantalla
+                timerInterval = setInterval(updateTimerDisplay, 1000);
+                
+                // Actualizar visualización del temporizador
+                updateTimerDisplay();
+            } else {
+                // Terminar de contar
+                isTracking = false;
+                button.textContent = 'Comenzar';
+                button.classList.remove('active');
+                
+                // Detener intervalo
+                clearInterval(timerInterval);
+                
+                // Calcular tiempo transcurrido
+                const endTime = new Date();
+                const timeDiff = endTime - startTime; // en milisegundos
+                const seconds = Math.floor(timeDiff / 1000);
+                
+                // Guardar tiempo registrado
+                saveTimeRecord(seconds);
+                
+                // Actualizar calendario
+                renderCalendar();
+                
+                // Actualizar visualización del tiempo de hoy
+                updateTodayTimer();
+            }
+        }
+        
+        // Función para actualizar la visualización del temporizador
+        function updateTimerDisplay() {
+            if (!isTracking) return;
+            
+            const now = new Date();
+            const timeDiff = now - startTime; // en milisegundos
+            const seconds = Math.floor(timeDiff / 1000);
+            
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            
+            document.getElementById('timer-display').textContent = 
+                `Contando: ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${secs.toString().padStart(2, '0')}s`;
+        }
+        
+        // Función para guardar el tiempo registrado
+        function saveTimeRecord(seconds) {
+            const today = new Date();
+            const dateKey = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
+            
+            // Si ya existe tiempo registrado para hoy, sumarlo
+            if (timeData[dateKey]) {
+                timeData[dateKey] += seconds;
+            } else {
+                timeData[dateKey] = seconds;
+            }
+            
+            // Guardar en localStorage
+            localStorage.setItem('timeTrackingData', JSON.stringify(timeData));
+        }
+        
+        // Función para cargar datos guardados
+        function loadSavedData() {
+            const savedData = localStorage.getItem('timeTrackingData');
+            if (savedData) {
+                timeData = JSON.parse(savedData);
+                console.log("Datos cargados desde localStorage:", timeData);
+            } else {
+                console.log("No hay datos guardados. Comenzando con datos vacíos.");
+                timeData = {};
+            }
+            
+            // NOTA: He eliminado los datos de ejemplo por defecto
+            // Ahora solo se cargan datos guardados en localStorage
+            // Si quieres datos de ejemplo para pruebas, descomenta las siguientes líneas:
+            /*
+            if (Object.keys(timeData).length === 0) {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = today.getMonth() + 1;
+                
+                // Añadir algunos datos de ejemplo
+                timeData[`${year}-${month}-15`] = 7200; // 2 horas
+                timeData[`${year}-${month}-18`] = 5400; // 1.5 horas
+                timeData[`${year}-${month}-20`] = 10800; // 3 horas
+                timeData[`${year}-${month}-22`] = 3600; // 1 hora
+                timeData[`${year}-${month}-25`] = 9000; // 2.5 horas
+                
+                // Hoy
+                const todayKey = `${year}-${month}-${today.getDate()}`;
+                timeData[todayKey] = timeData[todayKey] || 1800; // 30 minutos por defecto
+                
+                // Guardar datos de ejemplo
+                localStorage.setItem('timeTrackingData', JSON.stringify(timeData));
+                console.log("Datos de ejemplo creados.");
+            }
+            */
+        }
+        
+        // Función para borrar todos los datos
+        function clearAllData() {
+            if (confirm('¿Estás seguro de que quieres borrar todos los registros de tiempo?\nEsta acción no se puede deshacer.')) {
+                // Borrar datos de localStorage
+                localStorage.removeItem('timeTrackingData');
+                
+                // Reiniciar variable timeData
+                timeData = {};
+                
+                // Reiniciar el seguimiento si está activo
+                if (isTracking) {
+                    isTracking = false;
+                    clearInterval(timerInterval);
+                    const button = document.getElementById('action-button');
+                    button.textContent = 'Comenzar';
+                    button.classList.remove('active');
+                }
+                
+                // Actualizar visualizaciones
+                updateTodayTimer();
+                renderCalendar();
+                
+                alert('Todos los registros han sido borrados.');
+            }
+        }
+        
+        // Función para formatear el tiempo (segundos a horas, minutos)
+        function formatTime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            
+            if (hours > 0) {
+                return `${hours}h ${minutes}m`;
+            } else {
+                return `${minutes}m`;
+            }
+        }
+        
+        // Función para actualizar la visualización del tiempo de hoy
+        function updateTodayTimer() {
+            const today = new Date();
+            const dateKey = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
+            const todayTime = timeData[dateKey] || 0;
+            
+            const hours = Math.floor(todayTime / 3600);
+            const minutes = Math.floor((todayTime % 3600) / 60);
+            const seconds = todayTime % 60;
+            
+            document.getElementById('timer-display').textContent = 
+                `Tiempo registrado hoy: ${hours}h ${minutes}m ${seconds}s`;
+        }
+    </script>
+</body>
+</html>
