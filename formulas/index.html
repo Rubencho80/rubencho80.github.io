@@ -1,476 +1,1447 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fórmules</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-<style>
-:root {
-  --bg: #080e1a; --bg2: #0d1627; --bg3: #111d35;
-  --card: #0f1c32; --border: #1e3356;
-  --accent: #00d4ff; --text: #e2e8f0; --muted: #64748b;
-  --danger: #f43f5e; --success: #10b981;
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
-body::after{content:'';position:fixed;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:500px;background:radial-gradient(ellipse,rgba(0,212,255,.07) 0%,transparent 70%);pointer-events:none;z-index:0;}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fórmules</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <style>
+        :root {
+            --bg: #080e1a;
+            --bg2: #0d1627;
+            --bg3: #111d35;
+            --card: #0f1c32;
+            --border: #1e3356;
+            --accent: #00d4ff;
+            --text: #e2e8f0;
+            --muted: #64748b;
+            --danger: #f43f5e;
+            --success: #10b981;
+            --accent-text: #080e1a;
+            --formula-color: #7dd3fc;
+            --btn-add-shadow: rgba(0, 212, 255, .3);
+            --btn-add-shadow-hover: rgba(0, 212, 255, .4);
+            --builder-glow: rgba(0, 212, 255, .12);
+            --unit-badge-bg: rgba(0, 212, 255, .08);
+            --modal-overlay-bg: rgba(0, 0, 0, .75);
+            --grid-line-color: rgba(0, 212, 255, .03);
+            --glow-color: rgba(0, 212, 255, .07);
+            --header-gradient: linear-gradient(135deg, #fff 30%, var(--accent) 100%);
+            --card-hover-shadow: rgba(var(--cr, 0, 212, 255), .15);
+            --card-hover-bg: rgba(var(--cr, 0, 212, 255), .07);
+        }
 
-.container{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:48px 24px 80px;}
+        body.light-mode {
+            --bg: #fef9f0;
+            --bg2: #faf3e8;
+            --bg3: #f2e8d8;
+            --card: #fffdf7;
+            --border: #d9cebc;
+            --accent: #5b8cb8;
+            --text: #3d3226;
+            --muted: #8c7b6b;
+            --danger: #c94040;
+            --success: #2d8a5e;
+            --accent-text: #ffffff;
+            --formula-color: #3b6db5;
+            --btn-add-shadow: rgba(91, 140, 184, .25);
+            --btn-add-shadow-hover: rgba(91, 140, 184, .35);
+            --builder-glow: rgba(91, 140, 184, .15);
+            --unit-badge-bg: rgba(91, 140, 184, .1);
+            --modal-overlay-bg: rgba(0, 0, 0, .45);
+            --grid-line-color: rgba(180, 160, 140, .06);
+            --glow-color: rgba(180, 150, 120, .04);
+            --header-gradient: linear-gradient(135deg, #2c2416 30%, var(--accent) 100%);
+            --card-hover-shadow: rgba(var(--cr, 91, 140, 184), .12);
+            --card-hover-bg: rgba(var(--cr, 91, 140, 184), .05);
+        }
 
-/* HEADER */
-header{text-align:center;margin-bottom:40px;animation:fadeDown .7s ease both;}
-.label-chip{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:4px;color:var(--accent);text-transform:uppercase;margin-bottom:14px;opacity:.8;}
-header h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;line-height:1.1;background:linear-gradient(135deg,#fff 30%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px;}
-header p{color:var(--muted);font-size:.9rem;font-family:'Space Mono',monospace;}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-/* TOP ACTIONS */
-.top-actions{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:48px;}
-.btn-add{background:var(--accent);color:#080e1a;border:none;border-radius:10px;padding:10px 20px;font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .2s;box-shadow:0 4px 20px rgba(0,212,255,.3);}
-.btn-add:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,212,255,.4);}
-.btn-add .plus{font-size:1.2rem;font-weight:400;}
-.btn-secondary{background:transparent;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:10px 18px;font-family:'Syne',sans-serif;font-size:.85rem;cursor:pointer;transition:all .2s;}
-.btn-secondary:hover{border-color:var(--accent);color:var(--accent);}
-.btn-danger-soft{background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:10px;padding:10px 18px;font-family:'Syne',sans-serif;font-size:.85rem;cursor:pointer;transition:all .2s;}
-.btn-danger-soft:hover{border-color:var(--danger);color:var(--danger);}
+        html {
+            scroll-behavior: smooth;
+        }
 
-/* SECTIONS */
-.section{margin-bottom:52px;animation:fadeUp .6s ease both;}
-.section-header{display:flex;align-items:center;gap:14px;margin-bottom:22px;}
-.section-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
-.section-title{font-size:1.3rem;font-weight:700;}
-.section-line{flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);}
-.btn-edit-group{background:transparent;border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:.75rem;color:var(--muted);cursor:pointer;font-family:'Space Mono',monospace;transition:all .15s;flex-shrink:0;}
-.btn-edit-group:hover{border-color:var(--accent);color:var(--accent);}
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Syne', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background-color .35s, color .35s;
+        }
 
-/* CARDS */
-.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:13px;}
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 16px;cursor:pointer;transition:all .22s;position:relative;overflow:hidden;text-align:center;}
-.card::before{content:'';position:absolute;inset:0;background:rgba(var(--cr,0,212,255),.07);opacity:0;transition:opacity .22s;}
-.card:hover{border-color:var(--card-color,var(--accent));transform:translateY(-3px);box-shadow:0 8px 28px rgba(var(--cr,0,212,255),.15);}
-.card:hover::before{opacity:1;}
-.card-formula{font-size:1rem;min-height:34px;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;margin-bottom:8px;}
-.card-name{font-size:.72rem;color:var(--muted);font-family:'Space Mono',monospace;position:relative;z-index:1;line-height:1.4;}
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(var(--grid-line-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+            transition: background-image .35s;
+        }
 
-/* VIEW MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .22s;}
-.modal-overlay.active{opacity:1;pointer-events:all;}
-.modal{background:var(--bg2);border:1px solid var(--border);border-radius:20px;width:100%;transform:scale(.93) translateY(14px);transition:transform .28s cubic-bezier(.34,1.56,.64,1);position:relative;}
-.modal-overlay.active .modal{transform:scale(1) translateY(0);}
-.view-modal .modal{max-width:540px;max-height:85vh;overflow-y:auto;}
-.modal-header{padding:24px 24px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
-.modal-title{font-size:1.15rem;font-weight:700;}
-.modal-close-btn{background:var(--bg3);border:1px solid var(--border);border-radius:8px;width:30px;height:30px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;transition:all .15s;}
-.modal-close-btn:hover{color:var(--text);border-color:var(--accent);}
-.modal-body{padding:22px 24px 24px;}
-.modal-main-formula{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:22px;text-align:center;margin-bottom:18px;font-size:1.5rem;overflow-x:auto;}
-.modal-desc{color:#94a3b8;font-size:.88rem;line-height:1.7;margin-bottom:20px;font-family:'Space Mono',monospace;}
-.modal-sublabel{font-size:.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:10px;}
-.variants-grid{display:grid;gap:8px;margin-bottom:16px;}
-.variant-row-view{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;}
-.variant-f{font-size:.95rem;}
-.variant-d{font-size:.72rem;color:var(--muted);font-family:'Space Mono',monospace;text-align:right;line-height:1.4;flex-shrink:0;}
-.units-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px;}
-.unit-badge{background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);border-radius:6px;padding:4px 10px;font-family:'Space Mono',monospace;font-size:.72rem;color:var(--accent);}
-.modal-footer{padding:0 24px 20px;display:flex;justify-content:flex-end;gap:8px;}
-.btn-delete{background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-family:'Syne',sans-serif;font-size:.8rem;cursor:pointer;transition:all .2s;}
-.btn-delete:hover{border-color:var(--danger);color:var(--danger);}
-.btn-edit-formula{background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-family:'Syne',sans-serif;font-size:.8rem;cursor:pointer;transition:all .2s;}
-.btn-edit-formula:hover{border-color:var(--accent);color:var(--accent);}
+        body::after {
+            content: '';
+            position: fixed;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 500px;
+            background: radial-gradient(ellipse, var(--glow-color) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+            transition: background .35s;
+        }
 
-/* ADD / EDIT MODAL */
-.add-modal .modal{max-width:920px;height:88vh;display:flex;flex-direction:column;}
-.add-modal-body{display:grid;grid-template-columns:260px 1fr;flex:1;overflow:hidden;}
-.builder-panel{border-right:1px solid var(--border);overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;}
-.builder-panel::-webkit-scrollbar{width:4px;}
-.builder-panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-.builder-label{font-family:'Space Mono',monospace;font-size:.72rem;color:var(--muted);background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 10px;text-align:center;transition:all .2s;}
-.builder-label.connected{border-color:var(--accent);color:var(--accent);}
-.tab-bar{display:flex;flex-wrap:wrap;gap:5px;}
-.tab-btn{background:transparent;border:1px solid var(--border);border-radius:7px;padding:5px 9px;font-family:'Space Mono',monospace;font-size:.7rem;color:var(--muted);cursor:pointer;transition:all .15s;}
-.tab-btn:hover{border-color:var(--accent);color:var(--accent);}
-.tab-btn.active{background:var(--accent);color:#080e1a;border-color:var(--accent);}
-.tab-content{display:none;flex-wrap:wrap;gap:5px;}
-.tab-content.active{display:flex;}
-.builder-btn{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:5px 8px;font-family:'Space Mono',monospace;font-size:.78rem;color:var(--text);cursor:pointer;transition:all .14s;min-width:36px;text-align:center;}
-.builder-btn:hover{background:var(--accent);color:#080e1a;border-color:var(--accent);}
-.form-panel{overflow-y:auto;padding:20px 22px;}
-.form-panel::-webkit-scrollbar{width:4px;}
-.form-panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
-.field.full{grid-column:1/-1;}
-label{font-size:.75rem;font-family:'Space Mono',monospace;color:var(--muted);letter-spacing:.5px;}
-label .label-btn{background:transparent;border:1px solid var(--border);border-radius:5px;padding:2px 8px;font-family:'Space Mono',monospace;font-size:.68rem;color:var(--accent);cursor:pointer;float:right;transition:all .14s;}
-label .label-btn:hover{background:var(--accent);color:#080e1a;}
-input[type=text],input[type=email],select,textarea{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:9px 12px;color:var(--text);font-family:'Space Mono',monospace;font-size:.82rem;outline:none;transition:border-color .2s;width:100%;}
-input[type=text]:focus,select:focus,textarea:focus{border-color:var(--accent);}
-select{appearance:none;cursor:pointer;}
-select option{background:var(--bg2);}
-textarea{resize:vertical;min-height:60px;line-height:1.5;}
-.formula-input{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:9px 12px;color:#7dd3fc;font-family:'Space Mono',monospace;font-size:.82rem;outline:none;transition:all .2s;width:100%;resize:vertical;min-height:52px;}
-.formula-input:focus{border-color:var(--accent);}
-.formula-input.builder-connected{border-color:var(--accent);box-shadow:0 0 0 2px rgba(0,212,255,.12);}
-.formula-preview{background:var(--bg3);border:1px dotted var(--border);border-radius:9px;padding:12px;min-height:48px;display:flex;align-items:center;justify-content:center;text-align:center;overflow-x:auto;font-size:1.1rem;}
-.formula-preview:empty{display:none;}
-.new-group-box{background:var(--bg3);border:1px dashed var(--border);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;margin-top:-4px;}
-.new-group-box.hidden{display:none;}
-.color-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-.color-row input[type=color]{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);cursor:pointer;background:none;padding:2px;}
-.color-preset{width:26px;height:26px;border-radius:6px;border:2px solid transparent;cursor:pointer;transition:all .15s;}
-.color-preset:hover,.color-preset.sel{border-color:#fff;transform:scale(1.1);}
-.variant-add-row,.unit-add-row{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:7px;margin-bottom:8px;}
-.variant-inputs{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
-.remove-row-btn{background:transparent;border:none;color:var(--muted);font-size:.85rem;cursor:pointer;align-self:flex-end;padding:2px 6px;border-radius:5px;transition:all .14s;}
-.remove-row-btn:hover{color:var(--danger);}
-.form-footer{padding:14px 22px 18px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:flex-end;gap:10px;}
-.btn-primary{background:var(--accent);color:#080e1a;border:none;border-radius:10px;padding:10px 22px;font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .2s;}
-.btn-primary:hover{opacity:.9;transform:translateY(-1px);}
-.btn-cancel{background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:10px;padding:10px 18px;font-family:'Syne',sans-serif;font-size:.85rem;cursor:pointer;transition:all .2s;}
-.btn-cancel:hover{border-color:var(--muted);color:var(--text);}
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 48px 24px 80px;
+        }
 
-/* EDIT GROUP MODAL */
-.edit-group-modal .modal{max-width:460px;}
-.edit-group-modal .modal-body{padding:22px 24px 24px;display:flex;flex-direction:column;gap:14px;}
-.edit-group-modal .field{margin-bottom:0;}
-.eg-footer{padding:14px 24px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;}
+        /* THEME TOGGLE */
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 20px;
+            z-index: 200;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--bg2);
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .25s;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .12);
+            line-height: 1;
+            padding: 0;
+            color: var(--text);
+        }
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, .18);
+        }
+        .theme-toggle:active {
+            transform: scale(.94);
+        }
 
-/* TOAST */
-#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 22px;font-family:'Space Mono',monospace;font-size:.82rem;color:var(--text);z-index:9999;opacity:0;pointer-events:none;transition:all .3s;white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,.4);}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+        /* HEADER */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeDown .7s ease both;
+        }
+        .label-chip {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 4px;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 14px;
+            opacity: .8;
+            transition: color .3s;
+        }
+        header h1 {
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 800;
+            line-height: 1.1;
+            background: var(--header-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+            transition: background .35s;
+        }
+        header p {
+            color: var(--muted);
+            font-size: .9rem;
+            font-family: 'Space Mono', monospace;
+            transition: color .3s;
+        }
 
-/* EMPTY STATE */
-.empty-state{text-align:center;padding:60px 20px;color:var(--muted);font-family:'Space Mono',monospace;font-size:.85rem;}
+        /* TOP ACTIONS */
+        .top-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 48px;
+        }
+        .btn-add {
+            background: var(--accent);
+            color: var(--accent-text);
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: .9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all .25s;
+            box-shadow: 0 4px 20px var(--btn-add-shadow);
+        }
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--btn-add-shadow-hover);
+        }
+        .btn-add .plus {
+            font-size: 1.2rem;
+            font-weight: 400;
+        }
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 18px;
+            font-family: 'Syne', sans-serif;
+            font-size: .85rem;
+            cursor: pointer;
+            transition: all .25s;
+        }
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .btn-danger-soft {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 18px;
+            font-family: 'Syne', sans-serif;
+            font-size: .85rem;
+            cursor: pointer;
+            transition: all .25s;
+        }
+        .btn-danger-soft:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
 
-/* SCROLLBARS */
-.view-modal .modal::-webkit-scrollbar{width:5px;}
-.view-modal .modal::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+        /* SECTIONS */
+        .section {
+            margin-bottom: 52px;
+            animation: fadeUp .6s ease both;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border), transparent);
+        }
+        .btn-edit-group {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 5px 10px;
+            font-size: .75rem;
+            color: var(--muted);
+            cursor: pointer;
+            font-family: 'Space Mono', monospace;
+            transition: all .2s;
+            flex-shrink: 0;
+        }
+        .btn-edit-group:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
 
-/* ANIMATIONS */
-@keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+        /* CARDS */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+            gap: 13px;
+        }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px 16px;
+            cursor: pointer;
+            transition: all .28s;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--card-hover-bg);
+            opacity: 0;
+            transition: opacity .28s;
+        }
+        .card:hover {
+            border-color: var(--card-color, var(--accent));
+            transform: translateY(-3px);
+            box-shadow: 0 8px 28px var(--card-hover-shadow);
+        }
+        .card:hover::before {
+            opacity: 1;
+        }
+        .card-formula {
+            font-size: 1rem;
+            min-height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 8px;
+        }
+        .card-name {
+            font-size: .72rem;
+            color: var(--muted);
+            font-family: 'Space Mono', monospace;
+            position: relative;
+            z-index: 1;
+            line-height: 1.4;
+            transition: color .3s;
+        }
 
-/* RESPONSIVE */
-@media(max-width:700px){
-  .add-modal-body{grid-template-columns:1fr;height:auto;overflow:visible;}
-  .builder-panel{border-right:none;border-bottom:1px solid var(--border);}
-  .add-modal .modal{height:95vh;overflow-y:auto;}
-  .form-grid{grid-template-columns:1fr;}
-  .variant-inputs{grid-template-columns:1fr;}
-  .top-actions{gap:7px;}
-}
-</style>
+        /* VIEW MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--modal-overlay-bg);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .22s, background .35s;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .modal {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            width: 100%;
+            transform: scale(.93) translateY(14px);
+            transition: transform .28s cubic-bezier(.34, 1.56, .64, 1), background .3s, border-color .3s;
+            position: relative;
+        }
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+        .view-modal .modal {
+            max-width: 540px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            padding: 24px 24px 18px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .modal-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+        .modal-close-btn {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+            transition: all .2s;
+        }
+        .modal-close-btn:hover {
+            color: var(--text);
+            border-color: var(--accent);
+        }
+        .modal-body {
+            padding: 22px 24px 24px;
+        }
+        .modal-main-formula {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 22px;
+            text-align: center;
+            margin-bottom: 18px;
+            font-size: 1.5rem;
+            overflow-x: auto;
+            transition: background .3s, border-color .3s;
+        }
+        .modal-desc {
+            color: #94a3b8;
+            font-size: .88rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            font-family: 'Space Mono', monospace;
+            transition: color .3s;
+        }
+        body.light-mode .modal-desc {
+            color: #6b5e4f;
+        }
+        .modal-sublabel {
+            font-size: .68rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--muted);
+            font-family: 'Space Mono', monospace;
+            margin-bottom: 10px;
+            transition: color .3s;
+        }
+        .variants-grid {
+            display: grid;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .variant-row-view {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            transition: background .3s, border-color .3s;
+        }
+        .variant-f {
+            font-size: .95rem;
+        }
+        .variant-d {
+            font-size: .72rem;
+            color: var(--muted);
+            font-family: 'Space Mono', monospace;
+            text-align: right;
+            line-height: 1.4;
+            flex-shrink: 0;
+            transition: color .3s;
+        }
+        .units-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 16px;
+        }
+        .unit-badge {
+            background: var(--unit-badge-bg);
+            border: 1px solid rgba(0, 212, 255, .2);
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-family: 'Space Mono', monospace;
+            font-size: .72rem;
+            color: var(--accent);
+            transition: all .3s;
+        }
+        body.light-mode .unit-badge {
+            border-color: rgba(91, 140, 184, .25);
+        }
+        .modal-footer {
+            padding: 0 24px 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+        .btn-delete {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 7px 14px;
+            font-family: 'Syne', sans-serif;
+            font-size: .8rem;
+            cursor: pointer;
+            transition: all .25s;
+        }
+        .btn-delete:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+        .btn-edit-formula {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 7px 14px;
+            font-family: 'Syne', sans-serif;
+            font-size: .8rem;
+            cursor: pointer;
+            transition: all .25s;
+        }
+        .btn-edit-formula:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ADD / EDIT MODAL */
+        .add-modal .modal {
+            max-width: 920px;
+            height: 88vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .add-modal-body {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            flex: 1;
+            overflow: hidden;
+        }
+        .builder-panel {
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: border-color .3s;
+        }
+        .builder-panel::-webkit-scrollbar {
+            width: 4px;
+        }
+        .builder-panel::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+        .builder-label {
+            font-family: 'Space Mono', monospace;
+            font-size: .72rem;
+            color: var(--muted);
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 7px 10px;
+            text-align: center;
+            transition: all .25s;
+        }
+        .builder-label.connected {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .tab-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .tab-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            padding: 5px 9px;
+            font-family: 'Space Mono', monospace;
+            font-size: .7rem;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all .2s;
+        }
+        .tab-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .tab-btn.active {
+            background: var(--accent);
+            color: var(--accent-text);
+            border-color: var(--accent);
+        }
+        .tab-content {
+            display: none;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .tab-content.active {
+            display: flex;
+        }
+        .builder-btn {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            padding: 5px 8px;
+            font-family: 'Space Mono', monospace;
+            font-size: .78rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: all .18s;
+            min-width: 36px;
+            text-align: center;
+        }
+        .builder-btn:hover {
+            background: var(--accent);
+            color: var(--accent-text);
+            border-color: var(--accent);
+        }
+        .form-panel {
+            overflow-y: auto;
+            padding: 20px 22px;
+        }
+        .form-panel::-webkit-scrollbar {
+            width: 4px;
+        }
+        .form-panel::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+        .field.full {
+            grid-column: 1/-1;
+        }
+        label {
+            font-size: .75rem;
+            font-family: 'Space Mono', monospace;
+            color: var(--muted);
+            letter-spacing: .5px;
+            transition: color .3s;
+        }
+        label .label-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 2px 8px;
+            font-family: 'Space Mono', monospace;
+            font-size: .68rem;
+            color: var(--accent);
+            cursor: pointer;
+            float: right;
+            transition: all .2s;
+        }
+        label .label-btn:hover {
+            background: var(--accent);
+            color: var(--accent-text);
+        }
+        input[type=text],
+        input[type=email],
+        select,
+        textarea {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 9px 12px;
+            color: var(--text);
+            font-family: 'Space Mono', monospace;
+            font-size: .82rem;
+            outline: none;
+            transition: border-color .25s, background .3s, color .3s;
+            width: 100%;
+        }
+        input[type=text]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--accent);
+        }
+        select {
+            appearance: none;
+            cursor: pointer;
+        }
+        select option {
+            background: var(--bg2);
+            color: var(--text);
+        }
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+            line-height: 1.5;
+        }
+        .formula-input {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 9px 12px;
+            color: var(--formula-color);
+            font-family: 'Space Mono', monospace;
+            font-size: .82rem;
+            outline: none;
+            transition: all .25s;
+            width: 100%;
+            resize: vertical;
+            min-height: 52px;
+        }
+        .formula-input:focus {
+            border-color: var(--accent);
+        }
+        .formula-input.builder-connected {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px var(--builder-glow);
+        }
+        .formula-preview {
+            background: var(--bg3);
+            border: 1px dotted var(--border);
+            border-radius: 9px;
+            padding: 12px;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow-x: auto;
+            font-size: 1.1rem;
+            transition: all .3s;
+        }
+        .formula-preview:empty {
+            display: none;
+        }
+        .new-group-box {
+            background: var(--bg3);
+            border: 1px dashed var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: -4px;
+            transition: all .3s;
+        }
+        .new-group-box.hidden {
+            display: none;
+        }
+        .color-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .color-row input[type=color] {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            background: none;
+            padding: 2px;
+        }
+        .color-preset {
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all .18s;
+        }
+        .color-preset:hover,
+        .color-preset.sel {
+            border-color: #fff;
+            transform: scale(1.1);
+        }
+        body.light-mode .color-preset:hover,
+        body.light-mode .color-preset.sel {
+            border-color: #3d3226;
+        }
+        .variant-add-row,
+        .unit-add-row {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            margin-bottom: 8px;
+            transition: all .3s;
+        }
+        .variant-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px;
+        }
+        .remove-row-btn {
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            font-size: .85rem;
+            cursor: pointer;
+            align-self: flex-end;
+            padding: 2px 6px;
+            border-radius: 5px;
+            transition: all .2s;
+        }
+        .remove-row-btn:hover {
+            color: var(--danger);
+        }
+        .form-footer {
+            padding: 14px 22px 18px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            transition: border-color .3s;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: var(--accent-text);
+            border: none;
+            border-radius: 10px;
+            padding: 10px 22px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: .9rem;
+            cursor: pointer;
+            transition: all .25s;
+        }
+        .btn-primary:hover {
+            opacity: .9;
+            transform: translateY(-1px);
+        }
+        .btn-cancel {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 18px;
+            font-family: 'Syne', sans-serif;
+            font-size: .85rem;
+            cursor: pointer;
+            transition: all .25s;
+        }
+        .btn-cancel:hover {
+            border-color: var(--muted);
+            color: var(--text);
+        }
+
+        /* EDIT GROUP MODAL */
+        .edit-group-modal .modal {
+            max-width: 460px;
+        }
+        .edit-group-modal .modal-body {
+            padding: 22px 24px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .edit-group-modal .field {
+            margin-bottom: 0;
+        }
+        .eg-footer {
+            padding: 14px 24px 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            transition: border-color .3s;
+        }
+
+        /* TOAST */
+        #toast {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 22px;
+            font-family: 'Space Mono', monospace;
+            font-size: .82rem;
+            color: var(--text);
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: all .3s;
+            white-space: nowrap;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, .4);
+        }
+        #toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--muted);
+            font-family: 'Space Mono', monospace;
+            font-size: .85rem;
+            transition: color .3s;
+        }
+
+        /* SCROLLBARS */
+        .view-modal .modal::-webkit-scrollbar {
+            width: 5px;
+        }
+        .view-modal .modal::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeDown {
+            from {
+                opacity: 0;
+                transform: translateY(-18px)
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px)
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        /* RESPONSIVE */
+        @media(max-width:700px) {
+            .add-modal-body {
+                grid-template-columns: 1fr;
+                height: auto;
+                overflow: visible;
+            }
+            .builder-panel {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+            .add-modal .modal {
+                height: 95vh;
+                overflow-y: auto;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .variant-inputs {
+                grid-template-columns: 1fr;
+            }
+            .top-actions {
+                gap: 7px;
+            }
+            .theme-toggle {
+                top: 10px;
+                right: 12px;
+                width: 34px;
+                height: 34px;
+                font-size: 16px;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-  <header>
-    <div class="label-chip">Rubencho_80</div>
-    <h1>Llibre de Fórmules</h1>
-    <p>Clica una fórmula per veure detalladament · Afegeix les teves pròpies</p>
-  </header>
 
-  <div class="top-actions">
-    <button class="btn-add" onclick="openAddModal()">
-      <span class="plus">＋</span> Nova Fórmula
-    </button>
-    <button class="btn-secondary" onclick="exportData()">⬇ Exportar JSON</button>
-    <label class="btn-secondary" for="import-file" style="cursor:pointer">⬆ Importar JSON</label>
-    <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
-    <button class="btn-danger-soft" onclick="resetToDefault()">↺ Reiniciar</button>
-  </div>
+    <!-- THEME TOGGLE BUTTON -->
+    <button class="theme-toggle" onclick="toggleTheme()" title="Canviar tema" aria-label="Canviar tema">☀️</button>
 
-  <div id="groups-container"></div>
-</div>
+    <div class="container">
+        <header>
+            <div class="label-chip">Rubencho_80</div>
+            <h1>Llibre de Fórmules</h1>
+            <p>Clica una fórmula per veure detalladament · Afegeix les teves pròpies</p>
+        </header>
 
-<!-- VIEW MODAL -->
-<div class="modal-overlay view-modal" id="view-modal" onclick="handleOverlayClick(event,'view-modal')">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title" id="view-modal-title"></div>
-      <button class="modal-close-btn" onclick="closeViewModal()">✕</button>
+        <div class="top-actions">
+            <button class="btn-add" onclick="openAddModal()">
+                <span class="plus">＋</span> Nova Fórmula
+            </button>
+            <button class="btn-secondary" onclick="exportData()">⬇ Exportar JSON</button>
+            <label class="btn-secondary" for="import-file" style="cursor:pointer">⬆ Importar JSON</label>
+            <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+            <button class="btn-danger-soft" onclick="resetToDefault()">↺ Reiniciar</button>
+        </div>
+
+        <div id="groups-container"></div>
     </div>
-    <div class="modal-body" id="view-modal-body"></div>
-    <div class="modal-footer">
-      <button class="btn-delete" id="delete-btn" onclick="deleteCurrentFormula()">🗑 Eliminar fórmula</button>
-      <button class="btn-edit-formula" onclick="openEditFormula()">✏️ Editar fórmula</button>
-    </div>
-  </div>
-</div>
 
-<!-- ADD / EDIT FORMULA MODAL -->
-<div class="modal-overlay add-modal" id="add-modal" onclick="handleOverlayClick(event,'add-modal')">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title" id="add-modal-title">➕ Nova Fórmula</div>
-      <button class="modal-close-btn" onclick="closeAddModal()">✕</button>
-    </div>
-    <div class="add-modal-body">
-
-      <!-- BUILDER PANEL -->
-      <div class="builder-panel">
-        <div class="builder-label" id="builder-label">← Fes clic en un camp de fórmula</div>
-        <div class="tab-bar" id="tab-bar"></div>
-        <div id="tab-contents"></div>
-      </div>
-
-      <!-- FORM PANEL -->
-      <div class="form-panel">
-        <div class="form-grid">
-          <div class="field full">
-            <label>Títol de la fórmula *</label>
-            <input type="text" id="f-title" placeholder="Ex: Potència">
-          </div>
-          <div class="field full">
-            <label>Grup *</label>
-            <select id="f-group" onchange="onGroupChange()">
-              <option value="">— Selecciona un grup —</option>
-            </select>
-          </div>
-          <div class="new-group-box hidden full" id="new-group-box">
-            <div class="field" style="margin:0">
-              <label>Nom del nou grup *</label>
-              <input type="text" id="ng-title" placeholder="Ex: Termodinàmica">
+    <!-- VIEW MODAL -->
+    <div class="modal-overlay view-modal" id="view-modal" onclick="handleOverlayClick(event,'view-modal')">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="view-modal-title"></div>
+                <button class="modal-close-btn" onclick="closeViewModal()">✕</button>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-              <div class="field" style="margin:0">
-                <label>Icona (emoji)</label>
-                <input type="text" id="ng-icon" placeholder="🔬" maxlength="4">
-              </div>
-              <div class="field" style="margin:0">
-                <label>Color del grup</label>
-                <div class="color-row" id="color-row">
-                  <input type="color" id="ng-color" value="#00d4ff" oninput="syncColorPresets(this.value)">
+            <div class="modal-body" id="view-modal-body"></div>
+            <div class="modal-footer">
+                <button class="btn-delete" id="delete-btn" onclick="deleteCurrentFormula()">🗑 Eliminar fórmula</button>
+                <button class="btn-edit-formula" onclick="openEditFormula()">✏️ Editar fórmula</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD / EDIT FORMULA MODAL -->
+    <div class="modal-overlay add-modal" id="add-modal" onclick="handleOverlayClick(event,'add-modal')">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="add-modal-title">➕ Nova Fórmula</div>
+                <button class="modal-close-btn" onclick="closeAddModal()">✕</button>
+            </div>
+            <div class="add-modal-body">
+
+                <!-- BUILDER PANEL -->
+                <div class="builder-panel">
+                    <div class="builder-label" id="builder-label">← Fes clic en un camp de fórmula</div>
+                    <div class="tab-bar" id="tab-bar"></div>
+                    <div id="tab-contents"></div>
                 </div>
-              </div>
+
+                <!-- FORM PANEL -->
+                <div class="form-panel">
+                    <div class="form-grid">
+                        <div class="field full">
+                            <label>Títol de la fórmula *</label>
+                            <input type="text" id="f-title" placeholder="Ex: Potència">
+                        </div>
+                        <div class="field full">
+                            <label>Grup *</label>
+                            <select id="f-group" onchange="onGroupChange()">
+                                <option value="">— Selecciona un grup —</option>
+                            </select>
+                        </div>
+                        <div class="new-group-box hidden full" id="new-group-box">
+                            <div class="field" style="margin:0">
+                                <label>Nom del nou grup *</label>
+                                <input type="text" id="ng-title" placeholder="Ex: Termodinàmica">
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                                <div class="field" style="margin:0">
+                                    <label>Icona (emoji)</label>
+                                    <input type="text" id="ng-icon" placeholder="🔬" maxlength="4">
+                                </div>
+                                <div class="field" style="margin:0">
+                                    <label>Color del grup</label>
+                                    <div class="color-row" id="color-row">
+                                        <input type="color" id="ng-color" value="#00d4ff" oninput="syncColorPresets(this.value)">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field full">
+                            <label>Fórmula principal * <span style="color:var(--muted);float:right">← fes clic aquí per usar el constructor</span></label>
+                            <textarea id="f-main" class="formula-input" placeholder="Ex: P = \dfrac{E}{t}"
+                            oninput="updatePreviewById('f-main','prev-main')"
+                            onfocus="setActiveInput(this,'prev-main','Fórmula principal')"></textarea>
+                            <div class="formula-preview" id="prev-main"></div>
+                        </div>
+
+                        <div class="field full">
+                            <label>Descripció</label>
+                            <textarea id="f-desc" placeholder="Explica breument quan s'utilitza i què representa..."></textarea>
+                        </div>
+
+                        <div class="field full">
+                            <label>Variants i despejades <button class="label-btn" onclick="addVariantRow()">+ Afegir</button></label>
+                            <div id="variants-list"></div>
+                        </div>
+
+                        <div class="field full">
+                            <label>Unitats <button class="label-btn" onclick="addUnitRow()">+ Afegir</button></label>
+                            <div id="units-list"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-
-          <div class="field full">
-            <label>Fórmula principal * <span style="color:var(--muted);float:right">← fes clic aquí per usar el constructor</span></label>
-            <textarea id="f-main" class="formula-input" placeholder="Ex: P = \dfrac{E}{t}"
-              oninput="updatePreviewById('f-main','prev-main')"
-              onfocus="setActiveInput(this,'prev-main','Fórmula principal')"></textarea>
-            <div class="formula-preview" id="prev-main"></div>
-          </div>
-
-          <div class="field full">
-            <label>Descripció</label>
-            <textarea id="f-desc" placeholder="Explica breument quan s'utilitza i què representa..."></textarea>
-          </div>
-
-          <div class="field full">
-            <label>Variants i despejades <button class="label-btn" onclick="addVariantRow()">+ Afegir</button></label>
-            <div id="variants-list"></div>
-          </div>
-
-          <div class="field full">
-            <label>Unitats <button class="label-btn" onclick="addUnitRow()">+ Afegir</button></label>
-            <div id="units-list"></div>
-          </div>
+            <div class="form-footer">
+                <button class="btn-cancel" onclick="closeAddModal()">Cancel·lar</button>
+                <button class="btn-primary" id="add-modal-save-btn" onclick="submitFormula()">💾 Guardar Fórmula</button>
+            </div>
         </div>
-      </div>
     </div>
-    <div class="form-footer">
-      <button class="btn-cancel" onclick="closeAddModal()">Cancel·lar</button>
-      <button class="btn-primary" id="add-modal-save-btn" onclick="submitFormula()">💾 Guardar Fórmula</button>
-    </div>
-  </div>
-</div>
 
-<!-- EDIT GROUP MODAL -->
-<div class="modal-overlay edit-group-modal" id="edit-group-modal" onclick="handleOverlayClick(event,'edit-group-modal')">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">✏️ Editar Grup</div>
-      <button class="modal-close-btn" onclick="closeEditGroupModal()">✕</button>
-    </div>
-    <div class="modal-body" style="padding:22px 24px 8px;display:flex;flex-direction:column;gap:14px;">
-      <input type="hidden" id="eg-id">
-      <div class="field" style="margin:0">
-        <label>Nom del grup *</label>
-        <input type="text" id="eg-title" placeholder="Ex: Termodinàmica">
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div class="field" style="margin:0">
-          <label>Icona (emoji)</label>
-          <input type="text" id="eg-icon" placeholder="🔬" maxlength="4">
+    <!-- EDIT GROUP MODAL -->
+    <div class="modal-overlay edit-group-modal" id="edit-group-modal" onclick="handleOverlayClick(event,'edit-group-modal')">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">✏️ Editar Grup</div>
+                <button class="modal-close-btn" onclick="closeEditGroupModal()">✕</button>
+            </div>
+            <div class="modal-body" style="padding:22px 24px 8px;display:flex;flex-direction:column;gap:14px;">
+                <input type="hidden" id="eg-id">
+                <div class="field" style="margin:0">
+                    <label>Nom del grup *</label>
+                    <input type="text" id="eg-title" placeholder="Ex: Termodinàmica">
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                    <div class="field" style="margin:0">
+                        <label>Icona (emoji)</label>
+                        <input type="text" id="eg-icon" placeholder="🔬" maxlength="4">
+                    </div>
+                    <div class="field" style="margin:0">
+                        <label>Color del grup</label>
+                        <div class="color-row" id="eg-color-row">
+                            <input type="color" id="eg-color" value="#00d4ff" oninput="syncEditGroupColorPresets(this.value)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="eg-footer">
+                <button class="btn-cancel" onclick="closeEditGroupModal()">Cancel·lar</button>
+                <button class="btn-primary" onclick="saveEditGroup()">💾 Guardar Canvis</button>
+            </div>
         </div>
-        <div class="field" style="margin:0">
-          <label>Color del grup</label>
-          <div class="color-row" id="eg-color-row">
-            <input type="color" id="eg-color" value="#00d4ff" oninput="syncEditGroupColorPresets(this.value)">
-          </div>
-        </div>
-      </div>
     </div>
-    <div class="eg-footer">
-      <button class="btn-cancel" onclick="closeEditGroupModal()">Cancel·lar</button>
-      <button class="btn-primary" onclick="saveEditGroup()">💾 Guardar Canvis</button>
-    </div>
-  </div>
-</div>
 
-<div id="toast"></div>
+    <div id="toast"></div>
 
-<!-- KaTeX -->
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-<script>
-// ═══════════════════════════════════════════════
-// DEFAULT DATA
-// ═══════════════════════════════════════════════
-const DEFAULT_DATA = {groups:[
-  {id:'g-potencia',title:'Potència i Energia',icon:'⚡',color:'#00d4ff',formulas:[
-    {id:'f-potencia',title:'Potència',main:'P = \\dfrac{E}{t}',description:'La potència mesura quanta energia es transfereix per unitat de temps. Com més gran és la potència, més ràpidament es fa la feina.',variants:[{f:'P = \\dfrac{E}{t}',desc:'Definició bàsica'},{f:'E = P \\cdot t',desc:'Energia → P i t donats'},{f:'t = \\dfrac{E}{P}',desc:'Temps → E i P donats'}],units:['P → Watts (W)','E → Joules (J)','t → Segons (s)']},
-    {id:'f-energia',title:'Energia',main:'E = P \\cdot t',description:"L'energia és el resultat d'aplicar una potència durant un temps. Si la potència és constant, multiplicar per temps dona l'energia total.",variants:[{f:'E = P \\cdot t',desc:'Energia total'},{f:'P = \\dfrac{E}{t}',desc:'Despejar P'},{f:'t = \\dfrac{E}{P}',desc:'Despejar t'}],units:['E → Joules (J)','P → Watts (W)','t → Segons (s)']},
-    {id:'f-kwh',title:'Conversió kWh ↔ J',main:'1\\,\\text{kWh} = 3{,}6 \\cdot 10^6\\,\\text{J}',description:"El kilowatt-hora (kWh) és la unitat que fa servir la companyia elèctrica. Un kWh és l'energia que consumeix un aparell d'1 kW durant 1 hora.",variants:[{f:'1\\,\\text{kWh} = 3{,}6 \\cdot 10^6\\,\\text{J}',desc:'kWh → J'},{f:'1\\,\\text{J} = \\dfrac{1}{3{,}6 \\cdot 10^6}\\,\\text{kWh}',desc:'J → kWh'}],units:['kWh = kilowatt·hora','J = Joule']},
-    {id:'f-pelec',title:'Potència Elèctrica',main:'P = V \\cdot I',description:"La potència d'un circuit elèctric és el producte de la tensió i la intensitat. Serveix per calcular l'energia consumida per qualsevol aparell.",variants:[{f:'P = V \\cdot I',desc:'Definició'},{f:'V = \\dfrac{P}{I}',desc:'Tensió'},{f:'I = \\dfrac{P}{V}',desc:'Intensitat'}],units:['P → Watts (W)','V → Volts (V)','I → Amperes (A)']},
-  ]},
-  {id:'g-calor',title:'Calor i Combustibles',icon:'🔥',color:'#f59e0b',formulas:[
-    {id:'f-calor',title:'Calor Específica',main:'Q = C_e \\cdot m \\cdot \\Delta t',description:'Càlcul de l\'energia tèrmica necessària per escalfar o refredar una massa. La calor específica Ce és una propietat del material.',variants:[{f:'Q = C_e \\cdot m \\cdot \\Delta t',desc:'Calor absorbida/cedida'},{f:'C_e = \\dfrac{Q}{m \\cdot \\Delta t}',desc:'Calor específica'},{f:'\\Delta t = \\dfrac{Q}{C_e \\cdot m}',desc:'Variació de temperatura'}],units:['Q → Joules (J)','Ce → J/(kg·°C)','m → kg','Δt → °C o K']},
-    {id:'f-pc',title:'Poder Calorífic',main:'p_c = \\dfrac{E}{m}',description:"L'energia que allibera una unitat de massa d'un combustible en cremar-se completament. Valor característic de cada combustible.",variants:[{f:'p_c = \\dfrac{E}{m}',desc:'Poder calorífic'},{f:'E = p_c \\cdot m',desc:'Energia alliberada'},{f:'m = \\dfrac{E}{p_c}',desc:'Massa necessària'}],units:['pc → J/kg','E → Joules (J)','m → kg']},
-    {id:'f-combust',title:'Energia Combustible',main:'E = p_c \\cdot m',description:"L'energia total alliberada per una massa de combustible.",variants:[{f:'E = p_c \\cdot m',desc:'Energia total'},{f:'p_c = \\dfrac{E}{m}',desc:'Poder calorífic'}],units:['E → Joules (J)','pc → J/kg','m → kg']},
-    {id:'f-pcalor',title:'Calor Combustió (Pc)',main:'P_c = \\eta_c \\cdot q',description:'Calor extreta del combustible tenint en compte el rendiment del procés. No tota l\'energia química es transforma en calor útil.',variants:[{f:'P_c = \\eta_c \\cdot q',desc:'Amb rendiment i cabal'}],units:['Pc → W','ηc → adimensional (0-1)','q → kg/s']},
-  ]},
-  {id:'g-rendiment',title:'Rendiment',icon:'📊',color:'#10b981',formulas:[
-    {id:'f-rendp',title:'Rendiment (Potències)',main:'\\eta = \\dfrac{P_u}{P_c}',description:'El rendiment expressa quina fracció de la potència consumida es transforma en potència útil. Sempre entre 0 i 1. Cap màquina real té η = 1.',variants:[{f:'\\eta = \\dfrac{P_u}{P_c}',desc:'Rendiment'},{f:'P_u = \\eta \\cdot P_c',desc:'Potència útil'},{f:'P_c = \\dfrac{P_u}{\\eta}',desc:'Potència consumida'}],units:['η → adimensional [0,1]','Pu → Watts (W)','Pc → Watts (W)']},
-    {id:'f-rende',title:'Rendiment (Energies)',main:'\\eta = \\dfrac{E_u}{E_c}',description:'Equivalent al rendiment de potències però expressat en energies. Útil quan es treballa amb processos.',variants:[{f:'\\eta = \\dfrac{E_u}{E_c}',desc:'Rendiment energètic'},{f:'E_u = \\eta \\cdot E_c',desc:'Energia útil'},{f:'E_c = \\dfrac{E_u}{\\eta}',desc:'Energia consumida'}],units:['η → adimensional [0,1]','Eu → J','Ec → J']},
-  ]},
-  {id:'g-mecanica',title:'Mecànica',icon:'🏃',color:'#f43f5e',formulas:[
-    {id:'f-ec',title:'Energia Cinètica',main:'E_c = \\tfrac{1}{2}\\,m\\,v^2',description:"L'energia associada al moviment. Depèn del quadrat de la velocitat: si doblem la velocitat, l'energia cinètica es quadruplica.",variants:[{f:'E_c = \\tfrac{1}{2}\\,m\\,v^2',desc:'Definició'},{f:'v = \\sqrt{\\dfrac{2E_c}{m}}',desc:'Velocitat'},{f:'m = \\dfrac{2E_c}{v^2}',desc:'Massa'}],units:['Ec → Joules (J)','m → kg','v → m/s']},
-    {id:'f-ep',title:'Energia Potencial',main:'E_p = m \\cdot g \\cdot \\Delta h',description:"Energia emmagatzemada per la posició d'un cos en el camp gravitatori. Quan el cos baixa, es transforma en cinètica.",variants:[{f:'E_p = m \\cdot g \\cdot \\Delta h',desc:'Definició'},{f:'\\Delta h = \\dfrac{E_p}{m \\cdot g}',desc:'Altura'}],units:['Ep → J','m → kg','g = 9,8 m/s²','Δh → metres (m)']},
-    {id:'f-em',title:'Energia Mecànica',main:'E_m = E_p + E_c',description:"En un sistema sense fricció, l'energia mecànica total es conserva.",variants:[{f:'E_m = E_p + E_c',desc:'Suma total'},{f:'E_c = E_m - E_p',desc:'Cinètica'},{f:'E_p = E_m - E_c',desc:'Potencial'}],units:['Em → J','Ep → J','Ec → J']},
-    {id:'f-treb',title:'Treball Mecànic',main:'W = F \\cdot \\Delta x',description:"El treball és l'energia transferida per una força quan el seu punt d'aplicació es desplaça.",variants:[{f:'W = F \\cdot \\Delta x',desc:'Treball'},{f:'F = \\dfrac{W}{\\Delta x}',desc:'Força'},{f:'\\Delta x = \\dfrac{W}{F}',desc:'Desplaçament'}],units:['W → J','F → Newtons (N)','Δx → metres (m)']},
-    {id:'f-treb2',title:'Teorema Treball-Energia',main:'W = E_{m_0} - E_{m_f}',description:"El treball realitzat és igual a la variació de l'energia mecànica. Fonamental per resoldre problemes amb fricció.",variants:[{f:'W = E_{m_0} - E_{m_f}',desc:'Treball net'},{f:'E_{m_f} = E_{m_0} - W',desc:'Energia final'}],units:['W → J','Em0 → Energia inicial (J)','Emf → Energia final (J)']},
-    {id:'f-pmec',title:'Potència Mecànica',main:'P = F \\cdot v',description:"La potència mecànica és el treball per unitat de temps, equivalent a la força multiplicada per la velocitat.",variants:[{f:'P = \\dfrac{W}{t}',desc:'Des del treball'},{f:'P = F \\cdot v',desc:'Des de força i velocitat'},{f:'F = \\dfrac{P}{v}',desc:'Força'},{f:'v = \\dfrac{P}{F}',desc:'Velocitat'}],units:['P → W','W → J','t → s','F → N','v → m/s']},
-    {id:'f-mrua',title:'Posició en MRUA',main:'x(t) = x_0 + v_0\\,t + \\tfrac{1}{2}\\,a\\,t^2',description:"Equació del moviment uniformement accelerat. Permet calcular la posició d'un mòbil en qualsevol instant.",variants:[{f:'x(t) = x_0 + v_0 t + \\tfrac{1}{2}at^2',desc:'Posició'},{f:'v(t) = v_0 + a\\,t',desc:'Velocitat'},{f:'v^2 = v_0^2 + 2\\,a\\,\\Delta x',desc:'Sense temps'}],units:['x → m','t → s','v0 → m/s','a → m/s²']},
-    {id:'f-acc',title:'Acceleració',main:'a = \\dfrac{\\Delta v}{\\Delta t}',description:"La variació de velocitat per unitat de temps. Pot ser positiva (acceleració) o negativa (frenada).",variants:[{f:'a = \\dfrac{\\Delta v}{\\Delta t}',desc:'Definició'},{f:'\\Delta v = a \\cdot \\Delta t',desc:'Variació de velocitat'}],units:['a → m/s²','Δv → m/s','Δt → s']},
-  ]},
-  {id:'g-hidro',title:'Hidràulica i Fluids',icon:'💧',color:'#8b5cf6',formulas:[
-    {id:'f-phidro',title:'Potència Hidràulica',main:'P = q \\cdot g \\cdot h',description:'Potència que pot generar una central hidroelèctrica. Depèn del cabal, la gravetat i el salt hidràulic.',variants:[{f:'P = q \\cdot g \\cdot h',desc:'Potència'},{f:'h = \\dfrac{P}{q \\cdot g}',desc:'Alçada de caiguda'},{f:'q = \\dfrac{P}{g \\cdot h}',desc:'Cabal necessari'}],units:['P → W','q → kg/s','g = 9,8 m/s²','h → m']},
-    {id:'f-cabal',title:'Cabal',main:'q = \\dfrac{V}{t}',description:"El cabal mesura el volum de fluid que passa per una secció per unitat de temps.",variants:[{f:'q = \\dfrac{V}{t}',desc:'Cabal'},{f:'V = q \\cdot t',desc:'Volum'},{f:'t = \\dfrac{V}{q}',desc:'Temps'}],units:['q → m³/s','V → m³','t → s']},
-    {id:'f-dens',title:'Densitat',main:'\\rho = \\dfrac{m}{V}',description:"La massa per unitat de volum. Propietat de cada material. Per a l'aigua: ρ = 1000 kg/m³.",variants:[{f:'\\rho = \\dfrac{m}{V}',desc:'Densitat'},{f:'m = \\rho \\cdot V',desc:'Massa'},{f:'V = \\dfrac{m}{\\rho}',desc:'Volum'}],units:['ρ → kg/m³','m → kg','V → m³']},
-    {id:'f-hm3',title:'Conversió hm³ → m³',main:'1\\,\\text{hm}^3 = 10^6\\,\\text{m}^3',description:"Un hectòmetre cúbic equival a un milió de metres cúbics. S'usa per mesurar pantans i reserves.",variants:[{f:'1\\,\\text{hm}^3 = 10^6\\,\\text{m}^3',desc:'hm³ → m³'}],units:['hm³ = hectòmetre cúbic','m³ = metre cúbic']},
-  ]},
-  {id:'g-rotacio',title:'Mecànica Rotacional',icon:'🔄',color:'#06b6d4',formulas:[
-    {id:'f-omega',title:'Velocitat Angular',main:'\\omega = 2\\pi \\cdot n',description:"La velocitat angular en rad/s a partir de la freqüència de rotació n en voltes per segon.",variants:[{f:'\\omega = 2\\pi \\cdot n',desc:'n en voltes/segon (s⁻¹)'},{f:'n = \\dfrac{\\omega}{2\\pi}',desc:'Freqüència de rotació'}],units:['ω → rad/s','n → s⁻¹']},
-    {id:'f-omrpm',title:'Velocitat Angular (rpm)',main:'\\omega = \\dfrac{2\\pi \\cdot n_m}{60}',description:"Conversió de revolucions per minut (rpm) a velocitat angular en rad/s.",variants:[{f:'\\omega = \\dfrac{2\\pi \\cdot n_m}{60}',desc:'De rpm a rad/s'},{f:'n_m = \\dfrac{60\\,\\omega}{2\\pi}',desc:'De rad/s a rpm'}],units:['ω → rad/s','nm → min⁻¹ (rpm)']},
-    {id:'f-parell',title:'Parell de Torsió',main:'\\Gamma = F \\cdot r',description:"El parell és la tendència d'una força a fer girar un cos al voltant d'un eix.",variants:[{f:'\\Gamma = F \\cdot r',desc:'Parell'},{f:'F = \\dfrac{\\Gamma}{r}',desc:'Força'},{f:'r = \\dfrac{\\Gamma}{F}',desc:'Braç'}],units:['Γ → N·m','F → N','r → m']},
-    {id:'f-vlin',title:'Velocitat Lineal (des de ω)',main:'v = \\omega \\cdot R',description:"La velocitat lineal d'un punt en rotació. Com més lluny de l'eix, més gran és la velocitat lineal.",variants:[{f:'v = \\omega \\cdot R',desc:'Velocitat lineal'},{f:'\\omega = \\dfrac{v}{R}',desc:'Velocitat angular'},{f:'R = \\dfrac{v}{\\omega}',desc:'Radi'}],units:['v → m/s','ω → rad/s','R → m']},
-    {id:'f-prot',title:'Potència Rotacional',main:'P = \\Gamma \\cdot \\omega',description:"La potència d'una màquina rotativa: producte del parell per la velocitat angular.",variants:[{f:'P = \\Gamma \\cdot \\omega',desc:'Potència rotacional'},{f:'P = F \\cdot v',desc:'Equivalent lineal'},{f:'\\Gamma = \\dfrac{P}{\\omega}',desc:'Parell'}],units:['P → W','Γ → N·m','ω → rad/s']},
-    {id:'f-prpm',title:'Potència (en rpm)',main:'P = \\Gamma \\cdot \\dfrac{2\\pi\\,n_m}{60}',description:"Quan les revolucions s'expressen en rpm, cal convertir-les a rad/s per calcular la potència.",variants:[{f:'P = \\Gamma \\cdot \\dfrac{2\\pi\\,n_m}{60}',desc:'nm en rpm'},{f:'\\Gamma = \\dfrac{60\\,P}{2\\pi\\,n_m}',desc:'Parell'}],units:['P → W','Γ → N·m','nm → rpm']},
-  ]},
-]};
+    <!-- KaTeX -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js">
+    </script>
+    <script>
+        // ═══════════════════════════════════════════════
+        // THEME TOGGLE
+        // ═══════════════════════════════════════════════
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            updateThemeIcon();
+        }
 
-// ═══════════════════════════════════════════════
-// BUILDER TABS CONFIG
-// ═══════════════════════════════════════════════
-const BUILDER_TABS = [
-  {id:'arith', label:'+ − × ÷', btns:[
-    {d:'+',i:'+'},{d:'−',i:'-'},{d:'×',i:'\\times '},{d:'·',i:'\\cdot '},{d:'÷',i:'\\div '},
-    {d:'=',i:'='},{d:'≠',i:'\\neq '},{d:'<',i:'<'},{d:'>',i:'>'},{d:'≤',i:'\\leq '},{d:'≥',i:'\\geq '},{d:'±',i:'\\pm '},
-    {d:'( )',i:'()',c:1},{d:'[ ]',i:'[]',c:1},{d:'|x|',i:'|  |',c:2},
-  ]},
-  {id:'frac', label:'a/b √ xⁿ', btns:[
-    {d:'a/b',i:'\\dfrac{}{}',c:7},{d:'a/b₍s₎',i:'\\frac{}{}',c:6},
-    {d:'√x',i:'\\sqrt{}',c:6},{d:'ⁿ√x',i:'\\sqrt[]{}',c:6},
-    {d:'xⁿ',i:'^{}',c:2},{d:'xₙ',i:'_{}',c:2},
-    {d:'x²',i:'^{2}'},{d:'x³',i:'^{3}'},{d:'x⁻¹',i:'^{-1}'},{d:'½',i:'\\dfrac{1}{2}'},
-    {d:'x̄',i:'\\bar{}',c:5},{d:'x̃',i:'\\tilde{}',c:7},{d:'ẋ',i:'\\dot{}',c:5},
-  ]},
-  {id:'greek', label:'αβγΔΩ', btns:[
-    {d:'α',i:'\\alpha '},{d:'β',i:'\\beta '},{d:'γ',i:'\\gamma '},{d:'δ',i:'\\delta '},{d:'ε',i:'\\varepsilon '},
-    {d:'η',i:'\\eta '},{d:'θ',i:'\\theta '},{d:'λ',i:'\\lambda '},{d:'μ',i:'\\mu '},{d:'ξ',i:'\\xi '},
-    {d:'π',i:'\\pi '},{d:'ρ',i:'\\rho '},{d:'σ',i:'\\sigma '},{d:'τ',i:'\\tau '},{d:'φ',i:'\\phi '},
-    {d:'χ',i:'\\chi '},{d:'ψ',i:'\\psi '},{d:'ω',i:'\\omega '},
-    {d:'Δ',i:'\\Delta '},{d:'Γ',i:'\\Gamma '},{d:'Θ',i:'\\Theta '},{d:'Λ',i:'\\Lambda '},
-    {d:'Ξ',i:'\\Xi '},{d:'Π',i:'\\Pi '},{d:'Σ',i:'\\Sigma '},{d:'Φ',i:'\\Phi '},{d:'Ψ',i:'\\Psi '},{d:'Ω',i:'\\Omega '},
-  ]},
-  {id:'funcs', label:'sin log ∫', btns:[
-    {d:'sin',i:'\\sin '},{d:'cos',i:'\\cos '},{d:'tan',i:'\\tan '},
-    {d:'arcsin',i:'\\arcsin '},{d:'arccos',i:'\\arccos '},{d:'arctan',i:'\\arctan '},
-    {d:'log',i:'\\log '},{d:'log₁₀',i:'\\log_{10} '},{d:'ln',i:'\\ln '},{d:'exp',i:'\\exp '},
-    {d:'lim→',i:'\\lim_{x \\to \\infty}',c:6},
-    {d:'max',i:'\\max '},{d:'min',i:'\\min '},
-    {d:'Σ',i:'\\sum_{i=1}^{n}',c:7},{d:'Π',i:'\\prod_{i=1}^{n}',c:8},
-    {d:'∫',i:'\\int_{a}^{b}',c:5},{d:'∂',i:'\\partial '},{d:'∇',i:'\\nabla '},
-  ]},
-  {id:'special', label:'→ ∞ vec', btns:[
-    {d:'∞',i:'\\infty '},{d:'≈',i:'\\approx '},{d:'∝',i:'\\propto '},
-    {d:'→',i:'\\rightarrow '},{d:'←',i:'\\leftarrow '},{d:'⇒',i:'\\Rightarrow '},{d:'⇔',i:'\\Leftrightarrow '},
-    {d:'↑',i:'\\uparrow '},{d:'↓',i:'\\downarrow '},
-    {d:'vec',i:'\\vec{}',c:5},{d:'hat',i:'\\hat{}',c:5},{d:'dot',i:'\\dot{}',c:5},{d:'bar',i:'\\bar{}',c:5},
-    {d:'text',i:'\\text{}',c:6},{d:'bold',i:'\\mathbf{}',c:8},
-    {d:'∞',i:'\\infty '},{d:'°',i:'^{\\circ}'},{d:'%',i:'\\%'},{d:'…',i:'\\cdots '},
-    {d:'esp·',i:'\\,'},{d:'esp··',i:'\\;'},
-    {d:'⌈x⌉',i:'\\lceil  \\rceil',c:7},{d:'⌊x⌋',i:'\\lfloor  \\rfloor',c:8},
-    {d:'(L)',i:'\\left(  \\right)',c:7},{d:'[L]',i:'\\left[  \\right]',c:7},
-  ]},
-];
+        function updateThemeIcon() {
+            const btn = document.querySelector('.theme-toggle');
+            if (document.body.classList.contains('light-mode')) {
+                btn.textContent = '🌙';
+                btn.title = 'Mode fosc';
+            } else {
+                btn.textContent = '☀️';
+                btn.title = 'Mode clar';
+            }
+        }
 
-const COLOR_PRESETS = ['#00d4ff','#f59e0b','#10b981','#f43f5e','#8b5cf6','#06b6d4','#fb923c','#ec4899','#84cc16','#6366f1','#14b8a6','#ef4444'];
+        function initTheme() {
+            const saved = localStorage.getItem('theme');
+            if (saved === 'light') {
+                document.body.classList.add('light-mode');
+            } else if (saved === 'dark') {
+                document.body.classList.remove('light-mode');
+            }
+            // Si no hay preferencia guardada, se mantiene el modo oscuro por defecto
+            updateThemeIcon();
+        }
 
-// ═══════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════
-let appData = null;
-let activeInput = null;
-let activePreview = null;
-let currentGroupId = null;
-let currentFormulaId = null;
-let editingGroupId = null;
-let editingFormulaId = null;
+        // ═══════════════════════════════════════════════
+        // DEFAULT DATA
+        // ═══════════════════════════════════════════════
+        const DEFAULT_DATA = { groups: [{ id: 'g-potencia', title: 'Potència i Energia', icon: '⚡', color: '#00d4ff',
+                formulas: [{ id: 'f-potencia', title: 'Potència', main: 'P = \\dfrac{E}{t}',
+                    description: 'La potència mesura quanta energia es transfereix per unitat de temps. Com més gran és la potència, més ràpidament es fa la feina.',
+                    variants: [{ f: 'P = \\dfrac{E}{t}', desc: 'Definició bàsica' }, { f: 'E = P \\cdot t',
+                        desc: 'Energia → P i t donats' }, { f: 't = \\dfrac{E}{P}',
+                        desc: 'Temps → E i P donats' }], units: ['P → Watts (W)', 'E → Joules (J)',
+                        't → Segons (s)'
+                    ] }, { id: 'f-energia', title: 'Energia', main: 'E = P \\cdot t',
+                    description: "L'energia és el resultat d'aplicar una potència durant un temps. Si la potència és constant, multiplicar per temps dona l'energia total.",
+                    variants: [{ f: 'E = P \\cdot t', desc: 'Energia total' }, { f: 'P = \\dfrac{E}{t}',
+                        desc: 'Despejar P' }, { f: 't = \\dfrac{E}{P}', desc: 'Despejar t' }],
+                    units: ['E → Joules (J)', 'P → Watts (W)', 't → Segons (s)'] }, { id: 'f-kwh',
+                    title: 'Conversió kWh ↔ J', main: '1\\,\\text{kWh} = 3{,}6 \\cdot 10^6\\,\\text{J}',
+                    description: "El kilowatt-hora (kWh) és la unitat que fa servir la companyia elèctrica. Un kWh és l'energia que consumeix un aparell d'1 kW durant 1 hora.",
+                    variants: [{ f: '1\\,\\text{kWh} = 3{,}6 \\cdot 10^6\\,\\text{J}', desc: 'kWh → J' }, {
+                        f: '1\\,\\text{J} = \\dfrac{1}{3{,}6 \\cdot 10^6}\\,\\text{kWh}',
+                        desc: 'J → kWh' }], units: ['kWh = kilowatt·hora', 'J = Joule'] }, { id: 'f-pelec',
+                    title: 'Potència Elèctrica', main: 'P = V \\cdot I',
+                    description: "La potència d'un circuit elèctric és el producte de la tensió i la intensitat. Serveix per calcular l'energia consumida per qualsevol aparell.",
+                    variants: [{ f: 'P = V \\cdot I', desc: 'Definició' }, { f: 'V = \\dfrac{P}{I}',
+                        desc: 'Tensió' }, { f: 'I = \\dfrac{P}{V}', desc: 'Intensitat' }],
+                    units: ['P → Watts (W)', 'V → Volts (V)', 'I → Amperes (A)'] }, ] }, { id: 'g-calor',
+                title: 'Calor i Combustibles', icon: '🔥', color: '#f59e0b', formulas: [{ id: 'f-calor',
+                    title: 'Calor Específica', main: 'Q = C_e \\cdot m \\cdot \\Delta t',
+                    description: "Càlcul de l'energia tèrmica necessària per escalfar o refredar una massa. La calor específica Ce és una propietat del material.",
+                    variants: [{ f: 'Q = C_e \\cdot m \\cdot \\Delta t', desc: 'Calor absorbida/cedida' }, {
+                        f: 'C_e = \\dfrac{Q}{m \\cdot \\Delta t}', desc: 'Calor específica' }, {
+                        f: '\\Delta t = \\dfrac{Q}{C_e \\cdot m}', desc: 'Variació de temperatura' }],
+                    units: ['Q → Joules (J)', 'Ce → J/(kg·°C)', 'm → kg', 'Δt → °C o K'] }, { id: 'f-pc',
+                    title: 'Poder Calorífic', main: 'p_c = \\dfrac{E}{m}',
+                    description: "L'energia que allibera una unitat de massa d'un combustible en cremar-se completament. Valor característic de cada combustible.",
+                    variants: [{ f: 'p_c = \\dfrac{E}{m}', desc: 'Poder calorífic' }, {
+                        f: 'E = p_c \\cdot m', desc: 'Energia alliberada' }, { f: 'm = \\dfrac{E}{p_c}',
+                        desc: 'Massa necessària' }], units: ['pc → J/kg', 'E → Joules (J)',
+                        'm → kg'] }, { id: 'f-combust', title: 'Energia Combustible',
+                    main: 'E = p_c \\cdot m',
+                    description: "L'energia total alliberada per una massa de combustible.",
+                    variants: [{ f: 'E = p_c \\cdot m', desc: 'Energia total' }, { f: 'p_c = \\dfrac{E}{m}',
+                        desc: 'Poder calorífic' }], units: ['E → Joules (J)', 'pc → J/kg',
+                        'm → kg'] }, { id: 'f-pcalor', title: 'Calor Combustió (Pc)',
+                    main: 'P_c = \\eta_c \\cdot q',
+                    description: "Calor extreta del combustible tenint en compte el rendiment del procés. No tota l'energia química es transforma en calor útil.",
+                    variants: [{ f: 'P_c = \\eta_c \\cdot q', desc: 'Amb rendiment i cabal' }],
+                    units: ['Pc → W', 'ηc → adimensional (0-1)', 'q → kg/s'] }, ] }, { id: 'g-rendiment',
+                title: 'Rendiment', icon: '📊', color: '#10b981', formulas: [{ id: 'f-rendp',
+                    title: 'Rendiment (Potències)', main: '\\eta = \\dfrac{P_u}{P_c}',
+                    description: 'El rendiment expressa quina fracció de la potència consumida es transforma en potència útil. Sempre entre 0 i 1. Cap màquina real té η = 1.',
+                    variants: [{ f: '\\eta = \\dfrac{P_u}{P_c}', desc: 'Rendiment' }, {
+                        f: 'P_u = \\eta \\cdot P_c', desc: 'Potència útil' }, {
+                        f: 'P_c = \\dfrac{P_u}{\\eta}', desc: 'Potència consumida' }],
+                    units: ['η → adimensional [0,1]', 'Pu → Watts (W)', 'Pc → Watts (W)'] }, {
+                    id: 'f-rende', title: 'Rendiment (Energies)', main: '\\eta = \\dfrac{E_u}{E_c}',
+                    description: 'Equivalent al rendiment de potències però expressat en energies. Útil quan es treballa amb processos.',
+                    variants: [{ f: '\\eta = \\dfrac{E_u}{E_c}', desc: 'Rendiment energètic' }, {
+                        f: 'E_u = \\eta \\cdot E_c', desc: 'Energia útil' }, {
+                        f: 'E_c = \\dfrac{E_u}{\\eta}', desc: 'Energia consumida' }],
+                    units: ['η → adimensional [0,1]', 'Eu → J', 'Ec → J'] }, ] }, { id: 'g-mecanica',
+                title: 'Mecànica', icon: '🏃', color: '#f43f5e', formulas: [{ id: 'f-ec',
+                    title: 'Energia Cinètica', main: 'E_c = \\tfrac{1}{2}\\,m\\,v^2',
+                    description: "L'energia associada al moviment. Depèn del quadrat de la velocitat: si doblem la velocitat, l'energia cinètica es quadruplica.",
+                    variants: [{ f: 'E_c = \\tfrac{1}{2}\\,m\\,v^2', desc: 'Definició' }, {
+                        f: 'v = \\sqrt{\\dfrac{2E_c}{m}}', desc: 'Velocitat' }, {
+                        f: 'm = \\dfrac{2E_c}{v^2}', desc: 'Massa' }],
+                    units: ['Ec → Joules (J)', 'm → kg', 'v → m/s'] }, { id: 'f-ep',
+                    title: 'Energia Potencial', main: 'E_p = m \\cdot g \\cdot \\Delta h',
+                    description: "Energia emmagatzemada per la posició d'un cos en el camp gravitatori. Quan el cos baixa, es transforma en cinètica.",
+                    variants: [{ f: 'E_p = m \\cdot g \\cdot \\Delta h', desc: 'Definició' }, {
+                        f: '\\Delta h = \\dfrac{E_p}{m \\cdot g}', desc: 'Altura' }],
+                    units: ['Ep → J', 'm → kg', 'g = 9,8 m/s²', 'Δh → metres (m)'] }, { id: 'f-em',
+                    title: 'Energia Mecànica', main: 'E_m = E_p + E_c',
+                    description: "En un sistema sense fricció, l'energia mecànica total es conserva.",
+                    variants: [{ f: 'E_m = E_p + E_c', desc: 'Suma total' }, {
+                        f: 'E_c = E_m - E_p', desc: 'Cinètica' }, { f: 'E_p = E_m - E_c',
+                        desc: 'Potencial' }], units: ['Em → J', 'Ep → J', 'Ec → J'] }, { id: 'f-treb',
+                    title: 'Treball Mecànic', main: 'W = F \\cdot \\Delta x',
+                    description: "El treball és l'energia transferida per una força quan el seu punt d'aplicació es desplaça.",
+                    variants: [{ f: 'W = F \\cdot \\Delta x', desc: 'Treball' }, {
+                        f: 'F = \\dfrac{W}{\\Delta x}', desc: 'Força' }, {
+                        f: '\\Delta x = \\dfrac{W}{F}', desc: 'Desplaçament' }],
+                    units: ['W → J', 'F → Newtons (N)', 'Δx → metres (m)'] }, { id: 'f-treb2',
+                    title: 'Teorema Treball-Energia', main: 'W = E_{m_0} - E_{m_f}',
+                    description: "El treball realitzat és igual a la variació de l'energia mecànica. Fonamental per resoldre problemes amb fricció.",
+                    variants: [{ f: 'W = E_{m_0} - E_{m_f}', desc: 'Treball net' }, {
+                        f: 'E_{m_f} = E_{m_0} - W', desc: 'Energia final' }],
+                    units: ['W → J', 'Em0 → Energia inicial (J)', 'Emf → Energia final (J)'] }, {
+                    id: 'f-pmec', title: 'Potència Mecànica', main: 'P = F \\cdot v',
+                    description: "La potència mecànica és el treball per unitat de temps, equivalent a la força multiplicada per la velocitat.",
+                    variants: [{ f: 'P = \\dfrac{W}{t}', desc: 'Des del treball' }, {
+                        f: 'P = F \\cdot v', desc: 'Des de força i velocitat' }, {
+                        f: 'F = \\dfrac{P}{v}', desc: 'Força' }, { f: 'v = \\dfrac{P}{F}',
+                        desc: 'Velocitat' }], units: ['P → W', 'W → J', 't → s', 'F → N',
+                        'v → m/s'
+                    ] }, { id: 'f-mrua', title: 'Posició en MRUA',
+                    main: 'x(t) = x_0 + v_0\\,t + \\tfrac{1}{2}\\,a\\,t^2',
+                    description: "Equació del moviment uniformement accelerat. Permet calcular la posició d'un mòbil en qualsevol instant.",
+                    variants: [{ f: 'x(t) = x_0 + v_0 t + \\tfrac{1}{2}at^2', desc: 'Posició' }, {
+                        f: 'v(t) = v_0 + a\\,t', desc: 'Velocitat' }, {
+                        f: 'v^2 = v_0^2 + 2\\,a\\,\\Delta x', desc: 'Sense temps' }],
+                    units: ['x → m', 't → s', 'v0 → m/s', 'a → m/s²'] }, { id: 'f-acc',
+                    title: 'Acceleració', main: 'a = \\dfrac{\\Delta v}{\\Delta t}',
+                    description: "La variació de velocitat per unitat de temps. Pot ser positiva (acceleració) o negativa (frenada).",
+                    variants: [{ f: 'a = \\dfrac{\\Delta v}{\\Delta t}', desc: 'Definició' }, {
+                        f: '\\Delta v = a \\cdot \\Delta t', desc: 'Variació de velocitat' }],
+                    units: ['a → m/s²', 'Δv → m/s', 'Δt → s'] }, ] }, { id: 'g-hidro',
+                title: 'Hidràulica i Fluids', icon: '💧', color: '#8b5cf6', formulas: [{ id: 'f-phidro',
+                    title: 'Potència Hidràulica', main: 'P = q \\cdot g \\cdot h',
+                    description: 'Potència que pot generar una central hidroelèctrica. Depèn del cabal, la gravetat i el salt hidràulic.',
+                    variants: [{ f: 'P = q \\cdot g \\cdot h', desc: 'Potència' }, {
+                        f: 'h = \\dfrac{P}{q \\cdot g}', desc: 'Alçada de caiguda' }, {
+                        f: 'q = \\dfrac{P}{g \\cdot h}', desc: 'Cabal necessari' }],
+                    units: ['P → W', 'q → kg/s', 'g = 9,8 m/s²', 'h → m'] }, { id: 'f-cabal',
+                    title: 'Cabal', main: 'q = \\dfrac{V}{t}',
+                    description: "El cabal mesura el volum de fluid que passa per una secció per unitat de temps.",
+                    variants: [{ f: 'q = \\dfrac{V}{t}', desc: 'Cabal' }, { f: 'V = q \\cdot t',
+                        desc: 'Volum' }, { f: 't = \\dfrac{V}{q}', desc: 'Temps' }],
+                    units: ['q → m³/s', 'V → m³', 't → s'] }, { id: 'f-dens', title: 'Densitat',
+                    main: '\\rho = \\dfrac{m}{V}',
+                    description: "La massa per unitat de volum. Propietat de cada material. Per a l'aigua: ρ = 1000 kg/m³.",
+                    variants: [{ f: '\\rho = \\dfrac{m}{V}', desc: 'Densitat' }, {
+                        f: 'm = \\rho \\cdot V', desc: 'Massa' }, { f: 'V = \\dfrac{m}{\\rho}',
+                        desc: 'Volum' }], units: ['ρ → kg/m³', 'm → kg', 'V → m³'] }, { id: 'f-hm3',
+                    title: 'Conversió hm³ → m³', main: '1\\,\\text{hm}^3 = 10^6\\,\\text{m}^3',
+                    description: "Un hectòmetre cúbic equival a un milió de metres cúbics. S'usa per mesurar pantans i reserves.",
+                    variants: [{ f: '1\\,\\text{hm}^3 = 10^6\\,\\text{m}^3', desc: 'hm³ → m³' }],
+                    units: ['hm³ = hectòmetre cúbic', 'm³ = metre cúbic'] }, ] }, { id: 'g-rotacio',
+                title: 'Mecànica Rotacional', icon: '🔄', color: '#06b6d4', formulas: [{ id: 'f-omega',
+                    title: 'Velocitat Angular', main: '\\omega = 2\\pi \\cdot n',
+                    description: "La velocitat angular en rad/s a partir de la freqüència de rotació n en voltes per segon.",
+                    variants: [{ f: '\\omega = 2\\pi \\cdot n', desc: 'n en voltes/segon (s⁻¹)' }, {
+                        f: 'n = \\dfrac{\\omega}{2\\pi}', desc: 'Freqüència de rotació' }],
+                    units: ['ω → rad/s', 'n → s⁻¹'] }, { id: 'f-omrpm',
+                    title: 'Velocitat Angular (rpm)', main: '\\omega = \\dfrac{2\\pi \\cdot n_m}{60}',
+                    description: "Conversió de revolucions per minut (rpm) a velocitat angular en rad/s.",
+                    variants: [{ f: '\\omega = \\dfrac{2\\pi \\cdot n_m}{60}',
+                        desc: 'De rpm a rad/s' }, {
+                        f: 'n_m = \\dfrac{60\\,\\omega}{2\\pi}', desc: 'De rad/s a rpm' }],
+                    units: ['ω → rad/s', 'nm → min⁻¹ (rpm)'] }, { id: 'f-parell',
+                    title: 'Parell de Torsió', main: '\\Gamma = F \\cdot r',
+                    description: "El parell és la tendència d'una força a fer girar un cos al voltant d'un eix.",
+                    variants: [{ f: '\\Gamma = F \\cdot r', desc: 'Parell' }, {
+                        f: 'F = \\dfrac{\\Gamma}{r}', desc: 'Força' }, {
+                        f: 'r = \\dfrac{\\Gamma}{F}', desc: 'Braç' }],
+                    units: ['Γ → N·m', 'F → N', 'r → m'] }, { id: 'f-vlin',
+                    title: 'Velocitat Lineal (des de ω)', main: 'v = \\omega \\cdot R',
+                    description: "La velocitat lineal d'un punt en rotació. Com més lluny de l'eix, més gran és la velocitat lineal.",
+                    variants: [{ f: 'v = \\omega \\cdot R', desc: 'Velocitat lineal' }, {
+                        f: '\\omega = \\dfrac{v}{R}', desc: 'Velocitat angular' }, {
+                        f: 'R = \\dfrac{v}{\\omega}', desc: 'Radi' }],
+                    units: ['v → m/s', 'ω → rad/s', 'R → m'] }, { id: 'f-prot',
+                    title: 'Potència Rotacional', main: 'P = \\Gamma \\cdot \\omega',
+                    description: "La potència d'una màquina rotativa: producte del parell per la velocitat angular.",
+                    variants: [{ f: 'P = \\Gamma \\cdot \\omega', desc: 'Potència rotacional' }, {
+                        f: 'P = F \\cdot v', desc: 'Equivalent lineal' }, {
+                        f: '\\Gamma = \\dfrac{P}{\\omega}', desc: 'Parell' }],
+                    units: ['P → W', 'Γ → N·m', 'ω → rad/s'] }, { id: 'f-prpm',
+                    title: 'Potència (en rpm)',
+                    main: 'P = \\Gamma \\cdot \\dfrac{2\\pi\\,n_m}{60}',
+                    description: "Quan les revolucions s'expressen en rpm, cal convertir-les a rad/s per calcular la potència.",
+                    variants: [{ f: 'P = \\Gamma \\cdot \\dfrac{2\\pi\\,n_m}{60}',
+                        desc: 'nm en rpm' }, {
+                        f: '\\Gamma = \\dfrac{60\\,P}{2\\pi\\,n_m}', desc: 'Parell' }],
+                    units: ['P → W', 'Γ → N·m', 'nm → rpm'] }, ] }, ] };
 
-// ═══════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════
-function startApp() {
-  loadData();
-  buildBuilderToolbar();
-  buildColorPresets();
-  buildEditGroupColorPresets();
-  renderAll();
-}
+        // ═══════════════════════════════════════════════
+        // BUILDER TABS CONFIG
+        // ═══════════════════════════════════════════════
+        const BUILDER_TABS = [{ id: 'arith', label: '+ − × ÷', btns: [{ d: '+', i: '+' }, { d: '−', i: '-' }, { d: '×',
+                i: '\\times ' }, { d: '·', i: '\\cdot ' }, { d: '÷', i: '\\div ' }, { d: '=', i: '=' }, { d: '≠',
+                i: '\\neq ' }, { d: '<', i: '<' }, { d: '>', i: '>' }, { d: '≤', i: '\\leq ' }, { d: '≥',
+                i: '\\geq ' }, { d: '±', i: '\\pm ' }, { d: '( )', i: '()', c: 1 }, { d: '[ ]', i: '[]', c: 1 },
+            { d: '|x|', i: '|  |', c: 2 }, ] }, { id: 'frac', label: 'a/b √ xⁿ', btns: [{ d: 'a/b',
+                i: '\\dfrac{}{}', c: 7 }, { d: 'a/b₍s₎', i: '\\frac{}{}', c: 6 }, { d: '√x', i: '\\sqrt{}',
+                c: 6 }, { d: 'ⁿ√x', i: '\\sqrt[]{}', c: 6 }, { d: 'xⁿ', i: '^{}', c: 2 }, { d: 'xₙ', i: '_{}',
+                c: 2 }, { d: 'x²', i: '^{2}' }, { d: 'x³', i: '^{3}' }, { d: 'x⁻¹', i: '^{-1}' }, { d: '½',
+                i: '\\dfrac{1}{2}' }, { d: 'x̄', i: '\\bar{}', c: 5 }, { d: 'x̃', i: '\\tilde{}', c: 7 }, { d: 'ẋ',
+                i: '\\dot{}', c: 5 }, ] }, { id: 'greek', label: 'αβγΔΩ', btns: [{ d: 'α', i: '\\alpha ' }, { d: 'β',
+                i: '\\beta ' }, { d: 'γ', i: '\\gamma ' }, { d: 'δ', i: '\\delta ' }, { d: 'ε',
+                i: '\\varepsilon ' }, { d: 'η', i: '\\eta ' }, { d: 'θ', i: '\\theta ' }, { d: 'λ',
+                i: '\\lambda ' }, { d: 'μ', i: '\\mu ' }, { d: 'ξ', i: '\\xi ' }, { d: 'π', i: '\\pi ' }, { d: 'ρ',
+                i: '\\rho ' }, { d: 'σ', i: '\\sigma ' }, { d: 'τ', i: '\\tau ' }, { d: 'φ', i: '\\phi ' },
+            { d: 'χ', i: '\\chi ' }, { d: 'ψ', i: '\\psi ' }, { d: 'ω', i: '\\omega ' }, { d: 'Δ',
+                i: '\\Delta ' }, { d: 'Γ', i: '\\Gamma ' }, { d: 'Θ', i: '\\Theta ' }, { d: 'Λ',
+                i: '\\Lambda ' }, { d: 'Ξ', i: '\\Xi ' }, { d: 'Π', i: '\\Pi ' }, { d: 'Σ', i: '\\Sigma ' },
+            { d: 'Φ', i: '\\Phi ' }, { d: 'Ψ', i: '\\Psi ' }, { d: 'Ω', i: '\\Omega ' }, ] }, { id: 'funcs',
+            label: 'sin log ∫', btns: [{ d: 'sin', i: '\\sin ' }, { d: 'cos', i: '\\cos ' }, { d: 'tan',
+                    i: '\\tan ' }, { d: 'arcsin', i: '\\arcsin ' }, { d: 'arccos', i: '\\arccos ' }, { d: 'arctan',
+                    i: '\\arctan ' }, { d: 'log', i: '\\log ' }, { d: 'log₁₀', i: '\\log_{10} ' }, { d: 'ln',
+                    i: '\\ln ' }, { d: 'exp', i: '\\exp ' }, { d: 'lim→', i: '\\lim_{x \\to \\infty}',
+                c: 6 }, { d: 'max', i: '\\max ' }, { d: 'min', i: '\\min ' }, { d: 'Σ',
+                i: '\\sum_{i=1}^{n}', c: 7 }, { d: 'Π', i: '\\prod_{i=1}^{n}', c: 8 }, { d: '∫',
+                i: '\\int_{a}^{b}', c: 5 }, { d: '∂', i: '\\partial ' }, { d: '∇', i: '\\nabla ' }, ] },
+        { id: 'special', label: '→ ∞ vec', btns: [{ d: '∞', i: '\\infty ' }, { d: '≈', i: '\\approx ' }, { d: '∝',
+                    i: '\\propto ' }, { d: '→', i: '\\rightarrow ' }, { d: '←', i: '\\leftarrow ' }, { d: '⇒',
+                    i: '\\Rightarrow ' }, { d: '⇔', i: '\\Leftrightarrow ' }, { d: '↑', i: '\\uparrow ' },
+                { d: '↓', i: '\\downarrow ' }, { d: 'vec', i: '\\vec{}', c: 5 }, { d: 'hat', i: '\\hat{}',
+                c: 5 }, { d: 'dot', i: '\\dot{}', c: 5 }, { d: 'bar', i: '\\bar{}', c: 5 }, { d: 'text',
+                    i: '\\text{}', c: 6 }, { d: 'bold', i: '\\mathbf{}', c: 8 }, { d: '∞', i: '\\infty ' },
+                { d: '°', i: '^{\\circ}' }, { d: '%', i: '\\%' }, { d: '…', i: '\\cdots ' }, { d: 'esp·',
+                    i: '\\,' }, { d: 'esp··', i: '\\;' }, { d: '⌈x⌉', i: '\\lceil  \\rceil', c: 7 }, { d: '⌊x⌋',
+                    i: '\\lfloor  \\rfloor', c: 8 }, { d: '(L)', i: '\\left(  \\right)', c: 7 }, { d: '[L]',
+                    i: '\\left[  \\right]', c: 7 }, ] }, ];
 
-function loadData() {
-  try {
-    const saved = localStorage.getItem('fisica-formules-v2');
-    appData = saved ? JSON.parse(saved) : deepClone(DEFAULT_DATA);
-  } catch(e) {
-    appData = deepClone(DEFAULT_DATA);
-  }
-}
+        const COLOR_PRESETS = ['#00d4ff', '#f59e0b', '#10b981', '#f43f5e', '#8b5cf6', '#06b6d4', '#fb923c', '#ec4899',
+            '#84cc16', '#6366f1', '#14b8a6', '#ef4444'
+        ];
 
-function saveData() {
-  localStorage.setItem('fisica-formules-v2', JSON.stringify(appData));
-}
+        // ═══════════════════════════════════════════════
+        // STATE
+        // ═══════════════════════════════════════════════
+        let appData = null;
+        let activeInput = null;
+        let activePreview = null;
+        let currentGroupId = null;
+        let currentFormulaId = null;
+        let editingGroupId = null;
+        let editingFormulaId = null;
 
-function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
+        // ═══════════════════════════════════════════════
+        // INIT
+        // ═══════════════════════════════════════════════
+        function startApp() {
+            initTheme();
+            loadData();
+            buildBuilderToolbar();
+            buildColorPresets();
+            buildEditGroupColorPresets();
+            renderAll();
+        }
 
-function hexToRgb(hex) {
-  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
-  return `${r},${g},${b}`;
-}
+        function loadData() {
+            try {
+                const saved = localStorage.getItem('fisica-formules-v2');
+                appData = saved ? JSON.parse(saved) : deepClone(DEFAULT_DATA);
+            } catch (e) {
+                appData = deepClone(DEFAULT_DATA);
+            }
+        }
 
-// ═══════════════════════════════════════════════
-// RENDER
-// ═══════════════════════════════════════════════
-function renderAll() {
-  const cont = document.getElementById('groups-container');
-  cont.innerHTML = '';
-  if (!appData.groups.length) {
-    cont.innerHTML = '<div class="empty-state">Cap grup encara. Afegeix la primera fórmula! 🚀</div>';
-    return;
-  }
-  appData.groups.forEach((group, gi) => {
-    const sec = document.createElement('div');
-    sec.className = 'section';
-    sec.style.animationDelay = (gi * 0.08) + 's';
-    sec.innerHTML = `
+        function saveData() {
+            localStorage.setItem('fisica-formules-v2', JSON.stringify(appData));
+        }
+
+        function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
+
+        function hexToRgb(hex) {
+            const r = parseInt(hex.slice(1, 3), 16),
+                g = parseInt(hex.slice(3, 5), 16),
+                b = parseInt(hex.slice(5, 7), 16);
+            return `${r},${g},${b}`;
+        }
+
+        // ═══════════════════════════════════════════════
+        // RENDER
+        // ═══════════════════════════════════════════════
+        function renderAll() {
+            const cont = document.getElementById('groups-container');
+            cont.innerHTML = '';
+            if (!appData.groups.length) {
+                cont.innerHTML =
+                    '<div class="empty-state">Cap grup encara. Afegeix la primera fórmula! 🚀</div>';
+                return;
+            }
+            appData.groups.forEach((group, gi) => {
+                const sec = document.createElement('div');
+                sec.className = 'section';
+                sec.style.animationDelay = (gi * 0.08) + 's';
+                sec.innerHTML = `
       <div class="section-header">
         <div class="section-icon" style="background:rgba(${hexToRgb(group.color)},.12)">${group.icon}</div>
         <div class="section-title">${group.title}</div>
@@ -487,172 +1458,177 @@ function renderAll() {
         `).join('')}
       </div>
     `;
-    cont.appendChild(sec);
-  });
-  renderMathIn(cont);
-}
+                cont.appendChild(sec);
+            });
+            renderMathIn(cont);
+        }
 
-function renderMathIn(el) {
-  renderMathInElement(el, {
-    delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],
-    throwOnError:false
-  });
-}
+        function renderMathIn(el) {
+            renderMathInElement(el, {
+                delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$',
+                    display: false }],
+                throwOnError: false
+            });
+        }
 
-// ═══════════════════════════════════════════════
-// VIEW MODAL
-// ═══════════════════════════════════════════════
-function openViewModal(gId, fId) {
-  const group = appData.groups.find(g => g.id === gId);
-  if (!group) return;
-  const formula = group.formulas.find(f => f.id === fId);
-  if (!formula) return;
-  currentGroupId = gId;
-  currentFormulaId = fId;
+        // ═══════════════════════════════════════════════
+        // VIEW MODAL
+        // ═══════════════════════════════════════════════
+        function openViewModal(gId, fId) {
+            const group = appData.groups.find(g => g.id === gId);
+            if (!group) return;
+            const formula = group.formulas.find(f => f.id === fId);
+            if (!formula) return;
+            currentGroupId = gId;
+            currentFormulaId = fId;
 
-  document.getElementById('view-modal-title').textContent = formula.title;
+            document.getElementById('view-modal-title').textContent = formula.title;
 
-  const variantsHtml = formula.variants && formula.variants.length
-    ? `<div class="modal-sublabel" style="margin-top:18px">Variants i despejades</div>
+            const variantsHtml = formula.variants && formula.variants.length ?
+                `<div class="modal-sublabel" style="margin-top:18px">Variants i despejades</div>
        <div class="variants-grid">${formula.variants.map(v=>`
          <div class="variant-row-view">
            <div class="variant-f">$${v.f}$</div>
            <div class="variant-d">${v.desc}</div>
-         </div>`).join('')}</div>`
-    : '';
+         </div>`).join('')}</div>` :
+                '';
 
-  const unitsHtml = formula.units && formula.units.length
-    ? `<div class="units-row">${formula.units.map(u=>`<span class="unit-badge">${u}</span>`).join('')}</div>`
-    : '';
+            const unitsHtml = formula.units && formula.units.length ?
+                `<div class="units-row">${formula.units.map(u=>`<span class="unit-badge">${u}</span>`).join('')}</div>` :
+                '';
 
-  document.getElementById('view-modal-body').innerHTML = `
+            document.getElementById('view-modal-body').innerHTML = `
     <div class="modal-main-formula">$$${formula.main}$$</div>
     ${formula.description ? `<p class="modal-desc">${formula.description}</p>` : ''}
     ${variantsHtml}
     ${unitsHtml}
   `;
 
-  document.getElementById('view-modal').classList.add('active');
-  renderMathIn(document.getElementById('view-modal-body'));
-}
+            document.getElementById('view-modal').classList.add('active');
+            renderMathIn(document.getElementById('view-modal-body'));
+        }
 
-function closeViewModal() {
-  document.getElementById('view-modal').classList.remove('active');
-  currentGroupId = null; currentFormulaId = null;
-}
+        function closeViewModal() {
+            document.getElementById('view-modal').classList.remove('active');
+            currentGroupId = null;
+            currentFormulaId = null;
+        }
 
-function deleteCurrentFormula() {
-  if (!currentGroupId || !currentFormulaId) return;
-  if (!confirm('Eliminar aquesta fórmula? Aquesta acció no es pot desfer.')) return;
-  const group = appData.groups.find(g => g.id === currentGroupId);
-  group.formulas = group.formulas.filter(f => f.id !== currentFormulaId);
-  if (!group.formulas.length) {
-    if (confirm('El grup ha quedat buit. Eliminar el grup també?')) {
-      appData.groups = appData.groups.filter(g => g.id !== currentGroupId);
-    }
-  }
-  saveData(); renderAll(); closeViewModal();
-  showToast('Fórmula eliminada 🗑');
-}
+        function deleteCurrentFormula() {
+            if (!currentGroupId || !currentFormulaId) return;
+            if (!confirm('Eliminar aquesta fórmula? Aquesta acció no es pot desfer.')) return;
+            const group = appData.groups.find(g => g.id === currentGroupId);
+            group.formulas = group.formulas.filter(f => f.id !== currentFormulaId);
+            if (!group.formulas.length) {
+                if (confirm('El grup ha quedat buit. Eliminar el grup també?')) {
+                    appData.groups = appData.groups.filter(g => g.id !== currentGroupId);
+                }
+            }
+            saveData();
+            renderAll();
+            closeViewModal();
+            showToast('Fórmula eliminada 🗑');
+        }
 
-// ═══════════════════════════════════════════════
-// EDIT FORMULA
-// ═══════════════════════════════════════════════
-function openEditFormula() {
-  if (!currentGroupId || !currentFormulaId) return;
-  const group = appData.groups.find(g => g.id === currentGroupId);
-  const formula = group.formulas.find(f => f.id === currentFormulaId);
-  if (!group || !formula) return;
+        // ═══════════════════════════════════════════════
+        // EDIT FORMULA
+        // ═══════════════════════════════════════════════
+        function openEditFormula() {
+            if (!currentGroupId || !currentFormulaId) return;
+            const group = appData.groups.find(g => g.id === currentGroupId);
+            const formula = group.formulas.find(f => f.id === currentFormulaId);
+            if (!group || !formula) return;
 
-  editingGroupId = currentGroupId;
-  editingFormulaId = currentFormulaId;
+            editingGroupId = currentGroupId;
+            editingFormulaId = currentFormulaId;
 
-  closeViewModal();
-  resetAddForm();
-  populateGroupSelect();
+            closeViewModal();
+            resetAddForm();
+            populateGroupSelect();
 
-  // Pre-fill fields
-  document.getElementById('f-title').value = formula.title;
-  document.getElementById('f-main').value = formula.main;
-  renderPreview(formula.main, document.getElementById('prev-main'));
-  document.getElementById('f-desc').value = formula.description || '';
-  document.getElementById('f-group').value = group.id;
+            // Pre-fill fields
+            document.getElementById('f-title').value = formula.title;
+            document.getElementById('f-main').value = formula.main;
+            renderPreview(formula.main, document.getElementById('prev-main'));
+            document.getElementById('f-desc').value = formula.description || '';
+            document.getElementById('f-group').value = group.id;
 
-  // Pre-fill variants
-  (formula.variants || []).forEach(v => addVariantRowWithData(v.f, v.desc));
+            // Pre-fill variants
+            (formula.variants || []).forEach(v => addVariantRowWithData(v.f, v.desc));
 
-  // Pre-fill units
-  (formula.units || []).forEach(u => addUnitRowWithData(u));
+            // Pre-fill units
+            (formula.units || []).forEach(u => addUnitRowWithData(u));
 
-  // Change modal UI to edit mode
-  document.getElementById('add-modal-title').textContent = '✏️ Editar Fórmula';
-  document.getElementById('add-modal-save-btn').textContent = '💾 Guardar Canvis';
+            // Change modal UI to edit mode
+            document.getElementById('add-modal-title').textContent = '✏️ Editar Fórmula';
+            document.getElementById('add-modal-save-btn').textContent = '💾 Guardar Canvis';
 
-  document.getElementById('add-modal').classList.add('active');
-}
+            document.getElementById('add-modal').classList.add('active');
+        }
 
-// ═══════════════════════════════════════════════
-// ADD / EDIT MODAL
-// ═══════════════════════════════════════════════
-function openAddModal() {
-  editingGroupId = null;
-  editingFormulaId = null;
-  resetAddForm();
-  populateGroupSelect();
-  document.getElementById('add-modal-title').textContent = '➕ Nova Fórmula';
-  document.getElementById('add-modal-save-btn').textContent = '💾 Guardar Fórmula';
-  document.getElementById('add-modal').classList.add('active');
-  addVariantRow();
-  addUnitRow();
-}
+        // ═══════════════════════════════════════════════
+        // ADD / EDIT MODAL
+        // ═══════════════════════════════════════════════
+        function openAddModal() {
+            editingGroupId = null;
+            editingFormulaId = null;
+            resetAddForm();
+            populateGroupSelect();
+            document.getElementById('add-modal-title').textContent = '➕ Nova Fórmula';
+            document.getElementById('add-modal-save-btn').textContent = '💾 Guardar Fórmula';
+            document.getElementById('add-modal').classList.add('active');
+            addVariantRow();
+            addUnitRow();
+        }
 
-function closeAddModal() {
-  document.getElementById('add-modal').classList.remove('active');
-  editingGroupId = null;
-  editingFormulaId = null;
-  document.getElementById('add-modal-title').textContent = '➕ Nova Fórmula';
-  document.getElementById('add-modal-save-btn').textContent = '💾 Guardar Fórmula';
-}
+        function closeAddModal() {
+            document.getElementById('add-modal').classList.remove('active');
+            editingGroupId = null;
+            editingFormulaId = null;
+            document.getElementById('add-modal-title').textContent = '➕ Nova Fórmula';
+            document.getElementById('add-modal-save-btn').textContent = '💾 Guardar Fórmula';
+        }
 
-function resetAddForm() {
-  ['f-title','f-main','f-desc'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('prev-main').innerHTML = '';
-  document.getElementById('variants-list').innerHTML = '';
-  document.getElementById('units-list').innerHTML = '';
-  document.getElementById('new-group-box').classList.add('hidden');
-  ['ng-title','ng-icon'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('ng-color').value = '#00d4ff';
-  activeInput = null; activePreview = null;
-  document.getElementById('builder-label').textContent = '← Fes clic en un camp de fórmula';
-  document.getElementById('builder-label').classList.remove('connected');
-}
+        function resetAddForm() {
+            ['f-title', 'f-main', 'f-desc'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('prev-main').innerHTML = '';
+            document.getElementById('variants-list').innerHTML = '';
+            document.getElementById('units-list').innerHTML = '';
+            document.getElementById('new-group-box').classList.add('hidden');
+            ['ng-title', 'ng-icon'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('ng-color').value = '#00d4ff';
+            activeInput = null;
+            activePreview = null;
+            document.getElementById('builder-label').textContent = '← Fes clic en un camp de fórmula';
+            document.getElementById('builder-label').classList.remove('connected');
+        }
 
-function populateGroupSelect() {
-  const sel = document.getElementById('f-group');
-  sel.innerHTML = '<option value="">— Selecciona un grup —</option>';
-  appData.groups.forEach(g => {
-    const opt = document.createElement('option');
-    opt.value = g.id;
-    opt.textContent = g.icon + ' ' + g.title;
-    sel.appendChild(opt);
-  });
-  const newOpt = document.createElement('option');
-  newOpt.value = '__new__';
-  newOpt.textContent = '✨ Crear nou grup…';
-  sel.appendChild(newOpt);
-}
+        function populateGroupSelect() {
+            const sel = document.getElementById('f-group');
+            sel.innerHTML = '<option value="">— Selecciona un grup —</option>';
+            appData.groups.forEach(g => {
+                const opt = document.createElement('option');
+                opt.value = g.id;
+                opt.textContent = g.icon + ' ' + g.title;
+                sel.appendChild(opt);
+            });
+            const newOpt = document.createElement('option');
+            newOpt.value = '__new__';
+            newOpt.textContent = '✨ Crear nou grup…';
+            sel.appendChild(newOpt);
+        }
 
-function onGroupChange() {
-  const val = document.getElementById('f-group').value;
-  document.getElementById('new-group-box').classList.toggle('hidden', val !== '__new__');
-}
+        function onGroupChange() {
+            const val = document.getElementById('f-group').value;
+            document.getElementById('new-group-box').classList.toggle('hidden', val !== '__new__');
+        }
 
-function addVariantRow() {
-  const list = document.getElementById('variants-list');
-  const n = list.children.length + 1;
-  const div = document.createElement('div');
-  div.className = 'variant-add-row';
-  div.innerHTML = `
+        function addVariantRow() {
+            const list = document.getElementById('variants-list');
+            const n = list.children.length + 1;
+            const div = document.createElement('div');
+            div.className = 'variant-add-row';
+            div.innerHTML = `
     <div class="variant-inputs">
       <div>
         <label style="font-size:.68rem;color:var(--muted);font-family:'Space Mono',monospace">Fórmula variant ${n}</label>
@@ -668,15 +1644,15 @@ function addVariantRow() {
     </div>
     <button class="remove-row-btn" onclick="this.parentElement.remove()">✕ Eliminar</button>
   `;
-  list.appendChild(div);
-}
+            list.appendChild(div);
+        }
 
-function addVariantRowWithData(fVal, descVal) {
-  const list = document.getElementById('variants-list');
-  const n = list.children.length + 1;
-  const div = document.createElement('div');
-  div.className = 'variant-add-row';
-  div.innerHTML = `
+        function addVariantRowWithData(fVal, descVal) {
+            const list = document.getElementById('variants-list');
+            const n = list.children.length + 1;
+            const div = document.createElement('div');
+            div.className = 'variant-add-row';
+            div.innerHTML = `
     <div class="variant-inputs">
       <div>
         <label style="font-size:.68rem;color:var(--muted);font-family:'Space Mono',monospace">Fórmula variant ${n}</label>
@@ -692,355 +1668,389 @@ function addVariantRowWithData(fVal, descVal) {
     </div>
     <button class="remove-row-btn" onclick="this.parentElement.remove()">✕ Eliminar</button>
   `;
-  list.appendChild(div);
-  // Render preview for pre-filled value
-  if (fVal) {
-    const ta = div.querySelector('textarea');
-    const preview = div.querySelector('.formula-preview');
-    renderPreview(fVal, preview);
-  }
-}
+            list.appendChild(div);
+            // Render preview for pre-filled value
+            if (fVal) {
+                const ta = div.querySelector('textarea');
+                const preview = div.querySelector('.formula-preview');
+                renderPreview(fVal, preview);
+            }
+        }
 
-function addUnitRow() {
-  const list = document.getElementById('units-list');
-  const div = document.createElement('div');
-  div.className = 'unit-add-row';
-  div.style.cssText = 'flex-direction:row;align-items:center;gap:8px;padding:8px 10px;';
-  div.innerHTML = `
+        function addUnitRow() {
+            const list = document.getElementById('units-list');
+            const div = document.createElement('div');
+            div.className = 'unit-add-row';
+            div.style.cssText = 'flex-direction:row;align-items:center;gap:8px;padding:8px 10px;';
+            div.innerHTML = `
     <input type="text" placeholder="Ex: P → Watts (W)" style="flex:1">
     <button class="remove-row-btn" onclick="this.parentElement.remove()">✕</button>
   `;
-  list.appendChild(div);
-}
+            list.appendChild(div);
+        }
 
-function addUnitRowWithData(val) {
-  const list = document.getElementById('units-list');
-  const div = document.createElement('div');
-  div.className = 'unit-add-row';
-  div.style.cssText = 'flex-direction:row;align-items:center;gap:8px;padding:8px 10px;';
-  div.innerHTML = `
+        function addUnitRowWithData(val) {
+            const list = document.getElementById('units-list');
+            const div = document.createElement('div');
+            div.className = 'unit-add-row';
+            div.style.cssText = 'flex-direction:row;align-items:center;gap:8px;padding:8px 10px;';
+            div.innerHTML = `
     <input type="text" value="${(val || '').replace(/"/g,'&quot;')}" style="flex:1">
     <button class="remove-row-btn" onclick="this.parentElement.remove()">✕</button>
   `;
-  list.appendChild(div);
-}
+            list.appendChild(div);
+        }
 
-function submitFormula() {
-  const title = document.getElementById('f-title').value.trim();
-  const mainLatex = document.getElementById('f-main').value.trim();
-  const desc = document.getElementById('f-desc').value.trim();
-  const groupVal = document.getElementById('f-group').value;
+        function submitFormula() {
+            const title = document.getElementById('f-title').value.trim();
+            const mainLatex = document.getElementById('f-main').value.trim();
+            const desc = document.getElementById('f-desc').value.trim();
+            const groupVal = document.getElementById('f-group').value;
 
-  if (!title) { showToast('⚠️ El títol és obligatori!'); return; }
-  if (!mainLatex) { showToast('⚠️ La fórmula principal és obligatoria!'); return; }
-  if (!groupVal) { showToast('⚠️ Selecciona un grup!'); return; }
+            if (!title) { showToast('⚠️ El títol és obligatori!');
+                return; }
+            if (!mainLatex) { showToast('⚠️ La fórmula principal és obligatoria!');
+                return; }
+            if (!groupVal) { showToast('⚠️ Selecciona un grup!');
+                return; }
 
-  // Variants
-  const variants = [];
-  document.querySelectorAll('#variants-list .variant-add-row').forEach(row => {
-    const ta = row.querySelector('textarea');
-    const inp = row.querySelector('input[type=text]');
-    if (ta && ta.value.trim()) variants.push({f: ta.value.trim(), desc: inp ? inp.value.trim() : ''});
-  });
+            // Variants
+            const variants = [];
+            document.querySelectorAll('#variants-list .variant-add-row').forEach(row => {
+                const ta = row.querySelector('textarea');
+                const inp = row.querySelector('input[type=text]');
+                if (ta && ta.value.trim()) variants.push({ f: ta.value.trim(), desc: inp ? inp.value
+                        .trim() : '' });
+            });
 
-  // Units
-  const units = [];
-  document.querySelectorAll('#units-list .unit-add-row input[type=text]').forEach(inp => {
-    if (inp.value.trim()) units.push(inp.value.trim());
-  });
+            // Units
+            const units = [];
+            document.querySelectorAll('#units-list .unit-add-row input[type=text]').forEach(inp => {
+                if (inp.value.trim()) units.push(inp.value.trim());
+            });
 
-  // EDIT MODE
-  if (editingGroupId && editingFormulaId) {
-    const formulaObj = {id: editingFormulaId, title, main: mainLatex, description: desc, variants, units};
+            // EDIT MODE
+            if (editingGroupId && editingFormulaId) {
+                const formulaObj = { id: editingFormulaId, title, main: mainLatex, description: desc, variants,
+                    units };
 
-    if (groupVal === '__new__') {
-      // Moving to a new group while editing
-      const ngTitle = document.getElementById('ng-title').value.trim();
-      const ngIcon = document.getElementById('ng-icon').value.trim() || '📐';
-      const ngColor = document.getElementById('ng-color').value;
-      if (!ngTitle) { showToast('⚠️ Posa un nom al nou grup!'); return; }
-      // Remove from old group
-      const oldGroup = appData.groups.find(g => g.id === editingGroupId);
-      oldGroup.formulas = oldGroup.formulas.filter(f => f.id !== editingFormulaId);
-      if (!oldGroup.formulas.length) {
-        appData.groups = appData.groups.filter(g => g.id !== editingGroupId);
-      }
-      appData.groups.push({id:'g-'+Date.now(), title:ngTitle, icon:ngIcon, color:ngColor, formulas:[formulaObj]});
-    } else if (groupVal !== editingGroupId) {
-      // Moving to different existing group
-      const oldGroup = appData.groups.find(g => g.id === editingGroupId);
-      oldGroup.formulas = oldGroup.formulas.filter(f => f.id !== editingFormulaId);
-      if (!oldGroup.formulas.length) {
-        appData.groups = appData.groups.filter(g => g.id !== editingGroupId);
-      }
-      const newGroup = appData.groups.find(g => g.id === groupVal);
-      if (!newGroup) { showToast('⚠️ Grup no trobat!'); return; }
-      newGroup.formulas.push(formulaObj);
-    } else {
-      // Same group, just update
-      const group = appData.groups.find(g => g.id === editingGroupId);
-      const idx = group.formulas.findIndex(f => f.id === editingFormulaId);
-      if (idx !== -1) group.formulas[idx] = formulaObj;
-    }
+                if (groupVal === '__new__') {
+                    // Moving to a new group while editing
+                    const ngTitle = document.getElementById('ng-title').value.trim();
+                    const ngIcon = document.getElementById('ng-icon').value.trim() || '📐';
+                    const ngColor = document.getElementById('ng-color').value;
+                    if (!ngTitle) { showToast('⚠️ Posa un nom al nou grup!');
+                        return; }
+                    // Remove from old group
+                    const oldGroup = appData.groups.find(g => g.id === editingGroupId);
+                    oldGroup.formulas = oldGroup.formulas.filter(f => f.id !== editingFormulaId);
+                    if (!oldGroup.formulas.length) {
+                        appData.groups = appData.groups.filter(g => g.id !== editingGroupId);
+                    }
+                    appData.groups.push({ id: 'g-' + Date.now(), title: ngTitle, icon: ngIcon, color: ngColor,
+                        formulas: [formulaObj] });
+                } else if (groupVal !== editingGroupId) {
+                    // Moving to different existing group
+                    const oldGroup = appData.groups.find(g => g.id === editingGroupId);
+                    oldGroup.formulas = oldGroup.formulas.filter(f => f.id !== editingFormulaId);
+                    if (!oldGroup.formulas.length) {
+                        appData.groups = appData.groups.filter(g => g.id !== editingGroupId);
+                    }
+                    const newGroup = appData.groups.find(g => g.id === groupVal);
+                    if (!newGroup) { showToast('⚠️ Grup no trobat!');
+                        return; }
+                    newGroup.formulas.push(formulaObj);
+                } else {
+                    // Same group, just update
+                    const group = appData.groups.find(g => g.id === editingGroupId);
+                    const idx = group.formulas.findIndex(f => f.id === editingFormulaId);
+                    if (idx !== -1) group.formulas[idx] = formulaObj;
+                }
 
-    saveData(); renderAll(); closeAddModal();
-    showToast('Fórmula actualitzada! ✅');
-    return;
-  }
+                saveData();
+                renderAll();
+                closeAddModal();
+                showToast('Fórmula actualitzada! ✅');
+                return;
+            }
 
-  // ADD MODE
-  const formula = {id:'f-'+Date.now(), title, main:mainLatex, description:desc, variants, units};
+            // ADD MODE
+            const formula = { id: 'f-' + Date.now(), title, main: mainLatex, description: desc, variants,
+            units };
 
-  if (groupVal === '__new__') {
-    const ngTitle = document.getElementById('ng-title').value.trim();
-    const ngIcon = document.getElementById('ng-icon').value.trim() || '📐';
-    const ngColor = document.getElementById('ng-color').value;
-    if (!ngTitle) { showToast('⚠️ Posa un nom al nou grup!'); return; }
-    appData.groups.push({id:'g-'+Date.now(), title:ngTitle, icon:ngIcon, color:ngColor, formulas:[formula]});
-  } else {
-    const group = appData.groups.find(g => g.id === groupVal);
-    if (!group) { showToast('⚠️ Grup no trobat!'); return; }
-    group.formulas.push(formula);
-  }
+            if (groupVal === '__new__') {
+                const ngTitle = document.getElementById('ng-title').value.trim();
+                const ngIcon = document.getElementById('ng-icon').value.trim() || '📐';
+                const ngColor = document.getElementById('ng-color').value;
+                if (!ngTitle) { showToast('⚠️ Posa un nom al nou grup!');
+                    return; }
+                appData.groups.push({ id: 'g-' + Date.now(), title: ngTitle, icon: ngIcon, color: ngColor,
+                    formulas: [formula] });
+            } else {
+                const group = appData.groups.find(g => g.id === groupVal);
+                if (!group) { showToast('⚠️ Grup no trobat!');
+                    return; }
+                group.formulas.push(formula);
+            }
 
-  saveData(); renderAll(); closeAddModal();
-  showToast('Fórmula afegida correctament! 🎉');
-}
+            saveData();
+            renderAll();
+            closeAddModal();
+            showToast('Fórmula afegida correctament! 🎉');
+        }
 
-// ═══════════════════════════════════════════════
-// EDIT GROUP MODAL
-// ═══════════════════════════════════════════════
-function openEditGroupModal(gId) {
-  const group = appData.groups.find(g => g.id === gId);
-  if (!group) return;
-  document.getElementById('eg-id').value = gId;
-  document.getElementById('eg-title').value = group.title;
-  document.getElementById('eg-icon').value = group.icon;
-  document.getElementById('eg-color').value = group.color;
-  syncEditGroupColorPresets(group.color);
-  document.getElementById('edit-group-modal').classList.add('active');
-}
+        // ═══════════════════════════════════════════════
+        // EDIT GROUP MODAL
+        // ═══════════════════════════════════════════════
+        function openEditGroupModal(gId) {
+            const group = appData.groups.find(g => g.id === gId);
+            if (!group) return;
+            document.getElementById('eg-id').value = gId;
+            document.getElementById('eg-title').value = group.title;
+            document.getElementById('eg-icon').value = group.icon;
+            document.getElementById('eg-color').value = group.color;
+            syncEditGroupColorPresets(group.color);
+            document.getElementById('edit-group-modal').classList.add('active');
+        }
 
-function closeEditGroupModal() {
-  document.getElementById('edit-group-modal').classList.remove('active');
-}
+        function closeEditGroupModal() {
+            document.getElementById('edit-group-modal').classList.remove('active');
+        }
 
-function saveEditGroup() {
-  const gId = document.getElementById('eg-id').value;
-  const title = document.getElementById('eg-title').value.trim();
-  const icon = document.getElementById('eg-icon').value.trim() || '📐';
-  const color = document.getElementById('eg-color').value;
+        function saveEditGroup() {
+            const gId = document.getElementById('eg-id').value;
+            const title = document.getElementById('eg-title').value.trim();
+            const icon = document.getElementById('eg-icon').value.trim() || '📐';
+            const color = document.getElementById('eg-color').value;
 
-  if (!title) { showToast('⚠️ El nom del grup és obligatori!'); return; }
+            if (!title) { showToast('⚠️ El nom del grup és obligatori!');
+                return; }
 
-  const group = appData.groups.find(g => g.id === gId);
-  if (!group) return;
+            const group = appData.groups.find(g => g.id === gId);
+            if (!group) return;
 
-  group.title = title;
-  group.icon = icon;
-  group.color = color;
+            group.title = title;
+            group.icon = icon;
+            group.color = color;
 
-  saveData(); renderAll(); closeEditGroupModal();
-  showToast('Grup actualitzat! ✅');
-}
+            saveData();
+            renderAll();
+            closeEditGroupModal();
+            showToast('Grup actualitzat! ✅');
+        }
 
-// ═══════════════════════════════════════════════
-// BUILDER
-// ═══════════════════════════════════════════════
-function buildBuilderToolbar() {
-  const tabBar = document.getElementById('tab-bar');
-  const tabContents = document.getElementById('tab-contents');
-  BUILDER_TABS.forEach((tab, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'tab-btn' + (i===0?' active':'');
-    btn.textContent = tab.label;
-    btn.onclick = () => switchTab(tab.id, btn);
-    tabBar.appendChild(btn);
+        // ═══════════════════════════════════════════════
+        // BUILDER
+        // ═══════════════════════════════════════════════
+        function buildBuilderToolbar() {
+            const tabBar = document.getElementById('tab-bar');
+            const tabContents = document.getElementById('tab-contents');
+            BUILDER_TABS.forEach((tab, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'tab-btn' + (i === 0 ? ' active' : '');
+                btn.textContent = tab.label;
+                btn.onclick = () => switchTab(tab.id, btn);
+                tabBar.appendChild(btn);
 
-    const content = document.createElement('div');
-    content.id = 'tab-'+tab.id;
-    content.className = 'tab-content' + (i===0?' active':'');
-    tab.btns.forEach(b => {
-      const el = document.createElement('button');
-      el.className = 'builder-btn';
-      el.textContent = b.d;
-      el.title = b.i;
-      el.onclick = () => insertBuilder(b.i, b.c);
-      content.appendChild(el);
-    });
-    tabContents.appendChild(content);
-  });
-}
+                const content = document.createElement('div');
+                content.id = 'tab-' + tab.id;
+                content.className = 'tab-content' + (i === 0 ? ' active' : '');
+                tab.btns.forEach(b => {
+                    const el = document.createElement('button');
+                    el.className = 'builder-btn';
+                    el.textContent = b.d;
+                    el.title = b.i;
+                    el.onclick = () => insertBuilder(b.i, b.c);
+                    content.appendChild(el);
+                });
+                tabContents.appendChild(content);
+            });
+        }
 
-function switchTab(tabId, btnEl) {
-  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-  document.getElementById('tab-'+tabId).classList.add('active');
-  btnEl.classList.add('active');
-}
+        function switchTab(tabId, btnEl) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            btnEl.classList.add('active');
+        }
 
-function setActiveInput(inputEl, previewEl, label) {
-  document.querySelectorAll('.formula-input.builder-connected').forEach(el => el.classList.remove('builder-connected'));
-  activeInput = inputEl;
-  activePreview = previewEl;
-  inputEl.classList.add('builder-connected');
-  const lbl = document.getElementById('builder-label');
-  lbl.textContent = '⌨️ ' + label;
-  lbl.classList.add('connected');
-}
+        function setActiveInput(inputEl, previewEl, label) {
+            document.querySelectorAll('.formula-input.builder-connected').forEach(el => el.classList.remove(
+                'builder-connected'));
+            activeInput = inputEl;
+            activePreview = previewEl;
+            inputEl.classList.add('builder-connected');
+            const lbl = document.getElementById('builder-label');
+            lbl.textContent = '⌨️ ' + label;
+            lbl.classList.add('connected');
+        }
 
-function insertBuilder(text, cursorOffset) {
-  if (!activeInput) {
-    activeInput = document.getElementById('f-main');
-    activePreview = document.getElementById('prev-main');
-    activeInput.focus();
-  }
-  const ta = activeInput;
-  const start = ta.selectionStart, end = ta.selectionEnd;
-  ta.value = ta.value.substring(0,start) + text + ta.value.substring(end);
-  const pos = start + (cursorOffset !== undefined ? cursorOffset : text.length);
-  ta.setSelectionRange(pos, pos);
-  ta.focus();
-  if (activePreview) renderPreview(ta.value, activePreview);
-}
+        function insertBuilder(text, cursorOffset) {
+            if (!activeInput) {
+                activeInput = document.getElementById('f-main');
+                activePreview = document.getElementById('prev-main');
+                activeInput.focus();
+            }
+            const ta = activeInput;
+            const start = ta.selectionStart,
+                end = ta.selectionEnd;
+            ta.value = ta.value.substring(0, start) + text + ta.value.substring(end);
+            const pos = start + (cursorOffset !== undefined ? cursorOffset : text.length);
+            ta.setSelectionRange(pos, pos);
+            ta.focus();
+            if (activePreview) renderPreview(ta.value, activePreview);
+        }
 
-function updatePreviewById(inputId, previewId) {
-  const val = document.getElementById(inputId).value.trim();
-  renderPreview(val, document.getElementById(previewId));
-}
+        function updatePreviewById(inputId, previewId) {
+            const val = document.getElementById(inputId).value.trim();
+            renderPreview(val, document.getElementById(previewId));
+        }
 
-function updatePreviewDynamic(inputEl) {
-  const preview = inputEl.parentElement.querySelector('.formula-preview');
-  if (preview) renderPreview(inputEl.value.trim(), preview);
-}
+        function updatePreviewDynamic(inputEl) {
+            const preview = inputEl.parentElement.querySelector('.formula-preview');
+            if (preview) renderPreview(inputEl.value.trim(), preview);
+        }
 
-function renderPreview(latex, previewEl) {
-  if (!previewEl) return;
-  if (!latex) { previewEl.innerHTML = ''; return; }
-  try {
-    previewEl.innerHTML = katex.renderToString(latex, {throwOnError:false, displayMode:true});
-  } catch(e) {
-    previewEl.innerHTML = '<span style="color:#f87171;font-family:monospace;font-size:.8rem">Error de sintaxi</span>';
-  }
-}
+        function renderPreview(latex, previewEl) {
+            if (!previewEl) return;
+            if (!latex) { previewEl.innerHTML = '';
+                return; }
+            try {
+                previewEl.innerHTML = katex.renderToString(latex, { throwOnError: false, displayMode: true });
+            } catch (e) {
+                previewEl.innerHTML =
+                    '<span style="color:#f87171;font-family:monospace;font-size:.8rem">Error de sintaxi</span>';
+            }
+        }
 
-// ═══════════════════════════════════════════════
-// COLOR PRESETS (add formula modal)
-// ═══════════════════════════════════════════════
-function buildColorPresets() {
-  const row = document.getElementById('color-row');
-  COLOR_PRESETS.forEach(color => {
-    const div = document.createElement('div');
-    div.className = 'color-preset';
-    div.style.background = color;
-    div.title = color;
-    div.onclick = () => {
-      document.getElementById('ng-color').value = color;
-      document.querySelectorAll('#color-row .color-preset').forEach(el => el.classList.remove('sel'));
-      div.classList.add('sel');
-    };
-    row.appendChild(div);
-  });
-}
+        // ═══════════════════════════════════════════════
+        // COLOR PRESETS (add formula modal)
+        // ═══════════════════════════════════════════════
+        function buildColorPresets() {
+            const row = document.getElementById('color-row');
+            COLOR_PRESETS.forEach(color => {
+                const div = document.createElement('div');
+                div.className = 'color-preset';
+                div.style.background = color;
+                div.title = color;
+                div.onclick = () => {
+                    document.getElementById('ng-color').value = color;
+                    document.querySelectorAll('#color-row .color-preset').forEach(el => el.classList
+                        .remove('sel'));
+                    div.classList.add('sel');
+                };
+                row.appendChild(div);
+            });
+        }
 
-function syncColorPresets(val) {
-  document.querySelectorAll('#color-row .color-preset').forEach(el => {
-    el.classList.toggle('sel', el.title === val);
-  });
-}
+        function syncColorPresets(val) {
+            document.querySelectorAll('#color-row .color-preset').forEach(el => {
+                el.classList.toggle('sel', el.title === val);
+            });
+        }
 
-// ═══════════════════════════════════════════════
-// COLOR PRESETS (edit group modal)
-// ═══════════════════════════════════════════════
-function buildEditGroupColorPresets() {
-  const row = document.getElementById('eg-color-row');
-  COLOR_PRESETS.forEach(color => {
-    const div = document.createElement('div');
-    div.className = 'color-preset';
-    div.style.background = color;
-    div.title = color;
-    div.onclick = () => {
-      document.getElementById('eg-color').value = color;
-      document.querySelectorAll('#eg-color-row .color-preset').forEach(el => el.classList.remove('sel'));
-      div.classList.add('sel');
-    };
-    row.appendChild(div);
-  });
-}
+        // ═══════════════════════════════════════════════
+        // COLOR PRESETS (edit group modal)
+        // ═══════════════════════════════════════════════
+        function buildEditGroupColorPresets() {
+            const row = document.getElementById('eg-color-row');
+            COLOR_PRESETS.forEach(color => {
+                const div = document.createElement('div');
+                div.className = 'color-preset';
+                div.style.background = color;
+                div.title = color;
+                div.onclick = () => {
+                    document.getElementById('eg-color').value = color;
+                    document.querySelectorAll('#eg-color-row .color-preset').forEach(el => el.classList
+                        .remove('sel'));
+                    div.classList.add('sel');
+                };
+                row.appendChild(div);
+            });
+        }
 
-function syncEditGroupColorPresets(val) {
-  document.querySelectorAll('#eg-color-row .color-preset').forEach(el => {
-    el.classList.toggle('sel', el.title === val);
-  });
-}
+        function syncEditGroupColorPresets(val) {
+            document.querySelectorAll('#eg-color-row .color-preset').forEach(el => {
+                el.classList.toggle('sel', el.title === val);
+            });
+        }
 
-// ═══════════════════════════════════════════════
-// EXPORT / IMPORT
-// ═══════════════════════════════════════════════
-function exportData() {
-  const json = JSON.stringify(appData, null, 2);
-  const blob = new Blob([json], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'formules-fisica.json';
-  document.body.appendChild(a); a.click();
-  document.body.removeChild(a); URL.revokeObjectURL(url);
-  showToast('Arxiu exportat com formules-fisica.json 📁');
-}
+        // ═══════════════════════════════════════════════
+        // EXPORT / IMPORT
+        // ═══════════════════════════════════════════════
+        function exportData() {
+            const json = JSON.stringify(appData, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'formules-fisica.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('Arxiu exportat com formules-fisica.json 📁');
+        }
 
-function importData(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      const parsed = JSON.parse(e.target.result);
-      if (!parsed.groups || !Array.isArray(parsed.groups)) throw new Error('Format invàlid: falta la clau "groups"');
-      appData = parsed;
-      saveData(); renderAll();
-      showToast('Dades importades correctament! 📂 (' + appData.groups.length + ' grups)');
-    } catch(err) {
-      showToast('❌ Error al importar: ' + err.message);
-    }
-    event.target.value = '';
-  };
-  reader.readAsText(file);
-}
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (!parsed.groups || !Array.isArray(parsed.groups)) throw new Error(
+                        'Format invàlid: falta la clau "groups"');
+                    appData = parsed;
+                    saveData();
+                    renderAll();
+                    showToast('Dades importades correctament! 📂 (' + appData.groups.length + ' grups)');
+                } catch (err) {
+                    showToast('❌ Error al importar: ' + err.message);
+                }
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+        }
 
-function resetToDefault() {
-  if (!confirm('Segur que vols tornar a les fórmules predeterminades?\nEs perdran totes les fórmules afegides.')) return;
-  appData = deepClone(DEFAULT_DATA);
-  saveData(); renderAll();
-  showToast('Dades restaurades al predeterminat ↺');
-}
+        function resetToDefault() {
+            if (!confirm(
+                    'Segur que vols tornar a les fórmules predeterminades?\nEs perdran totes les fórmules afegides.')) return;
+            appData = deepClone(DEFAULT_DATA);
+            saveData();
+            renderAll();
+            showToast('Dades restaurades al predeterminat ↺');
+        }
 
-// ═══════════════════════════════════════════════
-// UI HELPERS
-// ═══════════════════════════════════════════════
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.classList.remove('show'), 3200);
-}
+        // ═══════════════════════════════════════════════
+        // UI HELPERS
+        // ═══════════════════════════════════════════════
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            clearTimeout(t._timer);
+            t._timer = setTimeout(() => t.classList.remove('show'), 3200);
+        }
 
-function handleOverlayClick(event, modalId) {
-  if (event.target === document.getElementById(modalId)) {
-    if (modalId === 'view-modal') closeViewModal();
-    else if (modalId === 'add-modal') closeAddModal();
-    else if (modalId === 'edit-group-modal') closeEditGroupModal();
-  }
-}
+        function handleOverlayClick(event, modalId) {
+            if (event.target === document.getElementById(modalId)) {
+                if (modalId === 'view-modal') closeViewModal();
+                else if (modalId === 'add-modal') closeAddModal();
+                else if (modalId === 'edit-group-modal') closeEditGroupModal();
+            }
+        }
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeViewModal(); closeAddModal(); closeEditGroupModal(); }
-});
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') { closeViewModal();
+                closeAddModal();
+                closeEditGroupModal(); }
+        });
 
-// ═══════════════════════════════════════════════
-// START
-// ═══════════════════════════════════════════════
-startApp();
-</script>
+        // ═══════════════════════════════════════════════
+        // START
+        // ═══════════════════════════════════════════════
+        startApp();
+    </script>
 </body>
 </html>
